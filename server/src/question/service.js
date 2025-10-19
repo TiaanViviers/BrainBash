@@ -69,8 +69,11 @@ export async function getRandomQuestions({ category, difficulty, amount }) {
   }
   
   // Shuffle and take requested amount
+  console.log(`[QUESTION] Found ${allQuestions.length} total questions, requesting ${amount}`);
   const shuffled = allQuestions.sort(() => Math.random() - 0.5);
-  const selected = shuffled.slice(0, Math.min(amount, shuffled.length));
+  const toTake = Math.min(amount, shuffled.length);
+  const selected = shuffled.slice(0, toTake);
+  console.log(`[QUESTION] Returning ${selected.length} questions (took ${toTake})`);
   
   // Format for match system (shuffle answer options)
   return selected.map(q => {

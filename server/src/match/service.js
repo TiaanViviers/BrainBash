@@ -86,12 +86,15 @@ export async function createMatch({ category, difficulty, amount = 10, players, 
   }
 
   // Get random questions from the Question service
+  console.log(`[MATCH] Requesting ${amount} questions for ${category} (${difficulty})`);
   const questions = await questionService.getRandomQuestions({
     category,
     difficulty: difficulty.toUpperCase(),
     amount
   });
 
+  console.log(`[MATCH] Received ${questions.length} questions from service`);
+  
   if (questions.length === 0) {
     throw new Error(`No questions available for ${category} at ${difficulty} difficulty`);
   }
@@ -125,8 +128,10 @@ export async function createMatch({ category, difficulty, amount = 10, players, 
     });
 
     // 3. Create match questions with shuffled options
+    console.log(`[MATCH] Inserting ${questions.length} questions into match`);
     for (let i = 0; i < questions.length; i++) {
       const q = questions[i];
+      console.log(`[MATCH] Inserting question ${i + 1}/${questions.length}`);
       
       await tx.match_questions.create({
         data: {
@@ -142,6 +147,7 @@ export async function createMatch({ category, difficulty, amount = 10, players, 
         }
       });
     }
+    console.log(`[MATCH] ✅ Successfully inserted ${questions.length} questions`);
 
     // 4. Add players
     for (const userId of players) {

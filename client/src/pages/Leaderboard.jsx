@@ -28,9 +28,11 @@ export default function Leaderboard() {
   }, [period]);
 
   const filteredLeaderboard =
-    leaderboard.filter((entry) =>
-      entry.username.toLowerCase().includes(searchQuery.toLowerCase())
-    ) || [];
+    leaderboard
+      .filter((entry) => !entry.username.startsWith("Deleted User")) // Filter out deleted users
+      .filter((entry) =>
+        entry.username.toLowerCase().includes(searchQuery.toLowerCase())
+      ) || [];
 
   const getRankBadge = (rank) => {
     if (rank === 1) return <Trophy className="h-6 w-6 text-yellow-400" />;
