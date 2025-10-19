@@ -75,8 +75,22 @@ function ProfilePage({ setIsLoggedIn }) {
         const data = await response.json();
 
         if (data.ok) {
-          // Filter for finished matches only (like MyMatch but for history)
-          const finishedMatches = (data.matches || []).filter(match => match.status === 'FINISHED');
+          // Get current user ID
+          const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
+          const currentUserId = currentUser.id;
+          
+          // Filter for finished matches where current user participated
+          const finishedMatches = (data.matches || []).filter(match => {
+            // Must be finished
+            if (match.status !== 'FINISHED') return false;
+            
+            // Check if current user is in the match_players array
+            return match.match_players?.some(player => 
+              player.user_id === currentUserId || 
+              player.user?.user_id === currentUserId
+            );
+          });
+          
           setMatchHistory(finishedMatches);
         } else {
           console.error("Failed to load match history:", data.error);
