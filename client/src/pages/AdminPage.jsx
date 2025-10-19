@@ -439,9 +439,9 @@ export default function AdminPage() {
       {/* Edit Question Modal */}
       {editingQuestion && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-800 rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-[hsl(var(--card))] border border-purple-500/30 rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-              <Edit3 className="h-5 w-5 text-blue-400" /> Edit Question
+              <Edit3 className="h-5 w-5 text-purple-400" /> Edit Question
             </h3>
             
             <form onSubmit={handleUpdateQuestion} className="grid gap-3 md:grid-cols-2">
@@ -450,41 +450,41 @@ export default function AdminPage() {
                 value={editForm.question_text}
                 onChange={(e) => setEditForm({ ...editForm, question_text: e.target.value })}
                 placeholder="Question Text"
-                className="md:col-span-2 bg-gray-700 p-2 rounded"
+                className="md:col-span-2 bg-gray-700/50 border border-purple-500/30 p-2 rounded text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               />
               <input
                 required
                 value={editForm.correct_answer}
                 onChange={(e) => setEditForm({ ...editForm, correct_answer: e.target.value })}
                 placeholder="Correct Answer"
-                className="bg-gray-700 p-2 rounded"
+                className="bg-gray-700/50 border border-purple-500/30 p-2 rounded text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               />
               <input
                 required
                 value={editForm.wrong_answer_1}
                 onChange={(e) => setEditForm({ ...editForm, wrong_answer_1: e.target.value })}
                 placeholder="Wrong Answer 1"
-                className="bg-gray-700 p-2 rounded"
+                className="bg-gray-700/50 border border-purple-500/30 p-2 rounded text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               />
               <input
                 required
                 value={editForm.wrong_answer_2}
                 onChange={(e) => setEditForm({ ...editForm, wrong_answer_2: e.target.value })}
                 placeholder="Wrong Answer 2"
-                className="bg-gray-700 p-2 rounded"
+                className="bg-gray-700/50 border border-purple-500/30 p-2 rounded text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               />
               <input
                 required
                 value={editForm.wrong_answer_3}
                 onChange={(e) => setEditForm({ ...editForm, wrong_answer_3: e.target.value })}
                 placeholder="Wrong Answer 3"
-                className="bg-gray-700 p-2 rounded"
+                className="bg-gray-700/50 border border-purple-500/30 p-2 rounded text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               />
               <select
                 required
                 value={editForm.category_id}
                 onChange={(e) => setEditForm({ ...editForm, category_id: e.target.value })}
-                className="bg-gray-700 p-2 rounded"
+                className="bg-gray-700/50 border border-purple-500/30 p-2 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               >
                 <option value="">Select Category</option>
                 {categories.map((cat) => (
@@ -497,7 +497,7 @@ export default function AdminPage() {
                 required
                 value={editForm.difficulty}
                 onChange={(e) => setEditForm({ ...editForm, difficulty: e.target.value })}
-                className="bg-gray-700 p-2 rounded"
+                className="bg-gray-700/50 border border-purple-500/30 p-2 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               >
                 <option value="EASY">Easy</option>
                 <option value="MEDIUM">Medium</option>
@@ -505,7 +505,7 @@ export default function AdminPage() {
               </select>
 
               <div className="md:col-span-2 flex gap-3 mt-2">
-                <button type="submit" className="flex-1 bg-blue-600 hover:bg-blue-700 rounded p-2">
+                <button type="submit" className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 rounded p-2 font-semibold transition">
                   Save Changes
                 </button>
                 <button 
@@ -514,7 +514,7 @@ export default function AdminPage() {
                     setEditingQuestion(null);
                     setEditForm({});
                   }}
-                  className="flex-1 bg-gray-600 hover:bg-gray-700 rounded p-2"
+                  className="flex-1 bg-gray-600 hover:bg-gray-700 text-white rounded p-2 font-semibold transition"
                 >
                   Cancel
                 </button>
@@ -523,10 +523,10 @@ export default function AdminPage() {
           </div>
         </div>
       )}
-    
+
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-2xl font-semibold flex items-center gap-2">
-          <HelpCircle className="h-6 w-6 text-blue-400" /> Manage Questions
+          <HelpCircle className="h-6 w-6 text-purple-400" /> Manage Questions
         </h2>
         
         {/* Import Questions Button */}
@@ -552,14 +552,14 @@ export default function AdminPage() {
             ? 'bg-green-500/20 border border-green-500 text-green-400'
             : importStatus.includes('❌')
             ? 'bg-red-500/20 border border-red-500 text-red-400'
-            : 'bg-blue-500/20 border border-blue-500 text-blue-400'
+            : 'bg-purple-500/20 border border-purple-500 text-purple-400'
         }`}>
           {importStatus}
         </div>
       )}
 
       {/* Search and Filter Bar */}
-      <div className="bg-gray-800 p-4 rounded-lg mb-6 space-y-3">
+      <div className="bg-[hsl(var(--card))] border border-purple-500/30 p-4 rounded-lg mb-6 space-y-3">
         <div className="flex items-center gap-3">
           <input
             type="text"
@@ -569,7 +569,7 @@ export default function AdminPage() {
               setSearchTerm(e.target.value);
               setCurrentPage(1); // Reset to page 1 when searching
             }}
-            className="flex-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 px-4 py-2 bg-gray-700/50 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
           />
           
           <select
@@ -578,7 +578,7 @@ export default function AdminPage() {
               setFilterCategory(e.target.value);
               setCurrentPage(1); // Reset to page 1 when filtering
             }}
-            className="px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-4 py-2 bg-gray-700/50 border border-purple-500/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
           >
             <option value="">All Categories</option>
             {categories.map((cat) => (
@@ -594,7 +594,7 @@ export default function AdminPage() {
               setFilterDifficulty(e.target.value);
               setCurrentPage(1); // Reset to page 1 when filtering
             }}
-            className="px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-4 py-2 bg-gray-700/50 border border-purple-500/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
           >
             <option value="">All Difficulties</option>
             <option value="EASY">Easy</option>
@@ -627,47 +627,47 @@ export default function AdminPage() {
         </div>
       </div>
 
-      <form onSubmit={handleAddQuestion} className="bg-gray-800 p-4 rounded-lg mb-6 grid gap-2 md:grid-cols-2">
+      <form onSubmit={handleAddQuestion} className="bg-[hsl(var(--card))] border border-purple-500/30 p-4 rounded-lg mb-6 grid gap-2 md:grid-cols-2">
         <input
           required
           value={form.question_text}
           onChange={(e) => setForm({ ...form, question_text: e.target.value })}
           placeholder="Question Text"
-          className="bg-gray-700 p-2 rounded"
+          className="bg-gray-700/50 border border-purple-500/30 p-2 rounded text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
         />
         <input
           required
           value={form.correct_answer}
           onChange={(e) => setForm({ ...form, correct_answer: e.target.value })}
           placeholder="Correct Answer"
-          className="bg-gray-700 p-2 rounded"
+          className="bg-gray-700/50 border border-purple-500/30 p-2 rounded text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
         />
         <input
           required
           value={form.wrong_answer_1}
           onChange={(e) => setForm({ ...form, wrong_answer_1: e.target.value })}
           placeholder="Wrong Answer 1"
-          className="bg-gray-700 p-2 rounded"
+          className="bg-gray-700/50 border border-purple-500/30 p-2 rounded text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
         />
         <input
           required
           value={form.wrong_answer_2}
           onChange={(e) => setForm({ ...form, wrong_answer_2: e.target.value })}
           placeholder="Wrong Answer 2"
-          className="bg-gray-700 p-2 rounded"
+          className="bg-gray-700/50 border border-purple-500/30 p-2 rounded text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
         />
         <input
           required
           value={form.wrong_answer_3}
           onChange={(e) => setForm({ ...form, wrong_answer_3: e.target.value })}
           placeholder="Wrong Answer 3"
-          className="bg-gray-700 p-2 rounded"
+          className="bg-gray-700/50 border border-purple-500/30 p-2 rounded text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
         />
         <select
           required
           value={form.category_id}
           onChange={(e) => setForm({ ...form, category_id: e.target.value })}
-          className="bg-gray-700 p-2 rounded"
+          className="bg-gray-700/50 border border-purple-500/30 p-2 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
         >
           <option value="">Select Category</option>
           {categories.map((cat) => (
@@ -680,14 +680,14 @@ export default function AdminPage() {
           required
           value={form.difficulty}
           onChange={(e) => setForm({ ...form, difficulty: e.target.value })}
-          className="bg-gray-700 p-2 rounded"
+          className="bg-gray-700/50 border border-purple-500/30 p-2 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
         >
           <option value="EASY">Easy</option>
           <option value="MEDIUM">Medium</option>
           <option value="HARD">Hard</option>
         </select>
 
-        <button type="submit" className="col-span-full bg-blue-600 hover:bg-blue-700 rounded p-2 mt-2">
+        <button type="submit" className="col-span-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 rounded p-2 mt-2 font-semibold transition">
           <Plus className="inline-block mr-2" size={18} /> Add Question
         </button>
       </form>
@@ -714,7 +714,7 @@ export default function AdminPage() {
                   <td className="p-2 text-right">
                     <button
                       onClick={() => handleEditQuestion(q)}
-                      className="text-blue-400 hover:text-blue-500 mr-3"
+                      className="text-purple-400 hover:text-purple-500 mr-3"
                       title="Edit question"
                     >
                       <Edit3 size={16} />
@@ -743,7 +743,7 @@ export default function AdminPage() {
             className={`px-4 py-2 rounded-lg font-medium transition ${
               currentPage === 1
                 ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                : 'bg-blue-600 hover:bg-blue-700 text-white'
+                : 'bg-yellow-500 hover:bg-yellow-600 text-gray-900'
             }`}
           >
             Previous
@@ -759,7 +759,7 @@ export default function AdminPage() {
             className={`px-4 py-2 rounded-lg font-medium transition ${
               currentPage === totalPages
                 ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                : 'bg-blue-600 hover:bg-blue-700 text-white'
+                : 'bg-yellow-500 hover:bg-yellow-600 text-gray-900'
             }`}
           >
             Next
@@ -776,21 +776,21 @@ export default function AdminPage() {
       </h2>
       
       {/* Add Category Form */}
-      <form onSubmit={handleAddCategory} className="bg-gray-800 p-4 rounded-lg mb-6 grid gap-3 md:grid-cols-3">
+      <form onSubmit={handleAddCategory} className="bg-[hsl(var(--card))] border border-purple-500/30 p-4 rounded-lg mb-6 grid gap-3 md:grid-cols-3">
         <input
           required
           value={categoryForm.name}
           onChange={(e) => setCategoryForm({ ...categoryForm, name: e.target.value })}
           placeholder="Category Name (e.g., Movies)"
-          className="bg-gray-700 p-2 rounded"
+          className="bg-gray-700/50 border border-purple-500/30 p-2 rounded text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
         />
         <input
           value={categoryForm.description}
           onChange={(e) => setCategoryForm({ ...categoryForm, description: e.target.value })}
           placeholder="Description (optional)"
-          className="bg-gray-700 p-2 rounded"
+          className="bg-gray-700/50 border border-purple-500/30 p-2 rounded text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
         />
-        <button type="submit" className="bg-green-600 hover:bg-green-700 rounded p-2 flex items-center justify-center gap-2">
+        <button type="submit" className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 rounded p-2 flex items-center justify-center gap-2 font-semibold transition">
           <Plus size={18} /> Add Category
         </button>
       </form>
@@ -802,7 +802,7 @@ export default function AdminPage() {
           {categories.map((cat) => (
             <li
               key={cat.category_id}
-              className="bg-gray-800 p-3 rounded flex justify-between items-center"
+              className="bg-[hsl(var(--card))] border border-purple-500/30 p-3 rounded flex justify-between items-center"
             >
               <span className="font-medium">{cat.name}</span>
               <span className="text-gray-400 text-sm">{cat.description || 'No description'}</span>
@@ -839,7 +839,7 @@ export default function AdminPage() {
                 <td className="p-2 text-right space-x-3">
                   <button
                     onClick={() => toggleUserRole(u.user_id, u.role)}
-                    className="text-blue-400 hover:text-blue-500"
+                    className="text-purple-400 hover:text-purple-500"
                     title="Toggle role"
                   >
                     <Edit3 size={16} />
@@ -865,7 +865,7 @@ export default function AdminPage() {
       <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
 
       {/* Real-time Presence Widget */}
-      <div className="bg-gray-800 p-4 rounded-lg mb-6">
+      <div className="bg-[hsl(var(--card))] border border-purple-500/30 p-4 rounded-lg mb-6">
         <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
           <span className="relative flex h-3 w-3">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
@@ -876,7 +876,7 @@ export default function AdminPage() {
         {activeUsers.length > 0 ? (
           <div className="flex flex-wrap gap-2">
             {activeUsers.map((username, idx) => (
-              <span key={idx} className="bg-gray-700 px-3 py-1 rounded-full text-sm">
+              <span key={idx} className="bg-purple-600/30 border border-purple-500/30 px-3 py-1 rounded-full text-sm">
                 🎮 {username}
               </span>
             ))}
@@ -887,29 +887,29 @@ export default function AdminPage() {
       </div>
 
       {/* TAB BUTTONS */}
-      <div className="flex gap-4 mb-6 border-b border-gray-700 pb-2">
+      <div className="flex gap-4 mb-6 border-b border-purple-500/30 pb-2">
         <button
           onClick={() => setActiveTab("questions")}
-          className={`pb-1 ${activeTab === "questions" ? "border-b-2 border-blue-500 text-blue-400" : "text-gray-400 hover:text-gray-200"}`}
+          className={`pb-1 ${activeTab === "questions" ? "border-b-2 border-purple-500 text-purple-400" : "text-gray-400 hover:text-gray-200"}`}
         >
           Questions
         </button>
         <button
           onClick={() => setActiveTab("categories")}
-          className={`pb-1 ${activeTab === "categories" ? "border-b-2 border-green-500 text-green-400" : "text-gray-400 hover:text-gray-200"}`}
+          className={`pb-1 ${activeTab === "categories" ? "border-b-2 border-purple-500 text-purple-400" : "text-gray-400 hover:text-gray-200"}`}
         >
           Categories
         </button>
         <button
           onClick={() => setActiveTab("users")}
-          className={`pb-1 ${activeTab === "users" ? "border-b-2 border-yellow-500 text-yellow-400" : "text-gray-400 hover:text-gray-200"}`}
+          className={`pb-1 ${activeTab === "users" ? "border-b-2 border-purple-500 text-purple-400" : "text-gray-400 hover:text-gray-200"}`}
         >
           Users
         </button>
       </div>
 
       {/* TAB CONTENT */}
-      <div className="bg-[#1e1e2f] p-4 rounded-xl shadow-lg border border-gray-800">
+      <div className="bg-[hsl(var(--muted))] p-4 rounded-xl shadow-lg border border-purple-500/30">
         {activeTab === "questions" && renderQuestions()}
         {activeTab === "categories" && renderCategories()}
         {activeTab === "users" && renderUsers()}

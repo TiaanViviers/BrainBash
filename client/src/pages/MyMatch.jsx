@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '../components/Card';
 import { PendingInvites } from '../components/PendingInvites';
 import API_URL from '../config';
+import { getCurrentUser, getToken } from '../utils/authUtils';
 
 export function MyMatch() {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ export function MyMatch() {
   const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState('desc'); // 'asc' or 'desc' for last activity
 
-  const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
+  const currentUser = getCurrentUser() || {};
 
   useEffect(() => {
     fetchCategories();
@@ -50,7 +51,7 @@ export function MyMatch() {
 
   const fetchMatches = async () => {
     try {
-      const token = localStorage.getItem("accessToken");
+      const token = getToken();
       const response = await fetch(`${API_URL}/api/match`, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -281,13 +282,13 @@ export function MyMatch() {
             <div className="flex flex-col lg:flex-row gap-4">
               {/* Search */}
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 h-5 w-5" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
                 <input
                   type="text"
                   placeholder="Search by category..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-[hsl(var(--muted))] text-gray-900 placeholder:text-gray-500 rounded-lg border border-border focus:border-[hsl(var(--primary))] focus:outline-none"
+                  className="w-full pl-10 pr-4 py-2 bg-[hsl(var(--muted))] text-white placeholder:text-gray-400 rounded-lg border border-border focus:border-[hsl(var(--primary))] focus:outline-none"
                 />
               </div>
 
@@ -295,7 +296,7 @@ export function MyMatch() {
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                className="px-4 py-2 bg-[hsl(var(--muted))] text-gray-900 rounded-lg border border-border focus:border-[hsl(var(--primary))] focus:outline-none [&>option]:text-gray-900 [&>option]:bg-white"
+                className="px-4 py-2 bg-[hsl(var(--muted))] text-white rounded-lg border border-border focus:border-[hsl(var(--primary))] focus:outline-none [&>option]:text-gray-900 [&>option]:bg-white"
               >
                 <option value="ALL">All Statuses</option>
                 <option value="SCHEDULED">Scheduled</option>
@@ -308,7 +309,7 @@ export function MyMatch() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-2 bg-[hsl(var(--muted))] text-gray-900 rounded-lg border border-border focus:border-[hsl(var(--primary))] focus:outline-none [&>option]:text-gray-900 [&>option]:bg-white"
+                className="px-4 py-2 bg-[hsl(var(--muted))] text-white rounded-lg border border-border focus:border-[hsl(var(--primary))] focus:outline-none [&>option]:text-gray-900 [&>option]:bg-white"
               >
                 <option value="desc">Newest First</option>
                 <option value="asc">Oldest First</option>
@@ -317,13 +318,13 @@ export function MyMatch() {
               {/* Category Filter Toggle */}
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center gap-2 px-4 py-2 bg-[hsl(var(--muted))] hover:bg-[hsl(var(--accent))] text-gray-900 rounded-lg border border-border transition"
+                className="flex items-center gap-2 px-4 py-2 bg-[hsl(var(--muted))] hover:bg-[hsl(var(--accent))] text-white rounded-lg border border-border transition"
               >
                 <Filter size={18} />
                 Categories
                 <ChevronDown
                   size={14}
-                  className={`transition-transform text-gray-900 ${
+                  className={`transition-transform text-white ${
                     showFilters ? "rotate-180" : ""
                   }`}
                 />
@@ -333,7 +334,7 @@ export function MyMatch() {
             {/* Category Checkboxes */}
             {showFilters && (
               <div className="pt-4 border-t border-border/50 space-y-2">
-                <p className="text-sm text-muted">Filter by category (max 4):</p>
+                <p className="text-sm text-gray-300">Filter by category (max 4):</p>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                   {categories.map((category) => (
                     <label
@@ -354,7 +355,7 @@ export function MyMatch() {
                         }
                         className="accent-[hsl(var(--primary))]"
                       />
-                      <span className="text-gray-900">{category}</span>
+                      <span className="text-white">{category}</span>
                     </label>
                   ))}
                 </div>

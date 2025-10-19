@@ -11,6 +11,7 @@ function Login({ setIsLoggedIn }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   // Loading state
   const [loading, setLoading] = useState(false);
@@ -22,6 +23,18 @@ function Login({ setIsLoggedIn }) {
   const [availableAvatars, setAvailableAvatars] = useState([]);
   const [loadingAvatars, setLoadingAvatars] = useState(true);
   const [showAvatarSelector, setShowAvatarSelector] = useState(false);
+
+  // Load saved credentials on mount
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("rememberedEmail");
+    const savedPassword = localStorage.getItem("rememberedPassword");
+    
+    if (savedEmail && savedPassword) {
+      setEmail(savedEmail);
+      setPassword(savedPassword);
+      setRememberMe(true);
+    }
+  }, []);
 
   // Load available avatars (used for Sign Up)
   useEffect(() => {
@@ -60,6 +73,16 @@ function Login({ setIsLoggedIn }) {
       const data = await response.json();
 
       if (data.ok) {
+        // Save credentials if "Remember Me" is checked
+        if (rememberMe) {
+          localStorage.setItem("rememberedEmail", email);
+          localStorage.setItem("rememberedPassword", password);
+        } else {
+          localStorage.removeItem("rememberedEmail");
+          localStorage.removeItem("rememberedPassword");
+        }
+
+        // Always use localStorage to stay logged in
         localStorage.setItem("accessToken", data.accessToken);
         localStorage.setItem(
           "currentUser",
@@ -104,6 +127,7 @@ function Login({ setIsLoggedIn }) {
       const data = await response.json();
 
       if (data.ok) {
+        // Always use localStorage to stay logged in
         localStorage.setItem("accessToken", data.accessToken);
         localStorage.setItem(
           "currentUser",
@@ -135,7 +159,7 @@ function Login({ setIsLoggedIn }) {
         <span className="text-white text-5xl md:text-4xl font-bold select-none">BrainBash</span>
       </div>
       
-      <div className="w-full max-w-md bg-gray-800 rounded-2xl shadow-lg p-8 space-y-6">
+      <div className="w-full max-w-md bg-[hsl(var(--card))] border border-purple-500/30 rounded-2xl shadow-2xl p-8 space-y-6">
         <h1 className="text-3xl font-bold text-white text-center">
           {isSignUp ? "Sign Up" : "Login"}
         </h1>
@@ -146,7 +170,7 @@ function Login({ setIsLoggedIn }) {
         >
           {/* Sign Up Avatar Selection */}
           {isSignUp && (
-            <div className="bg-gray-700 rounded-xl p-4">
+            <div className="bg-gray-700/50 border border-purple-500/30 rounded-xl p-4">
               <label className="block mb-3 font-semibold text-gray-200">
                 Avatar
               </label>
@@ -154,12 +178,12 @@ function Login({ setIsLoggedIn }) {
                 <img
                   src={avatar}
                   alt="Avatar"
-                  className="w-20 h-20 rounded-full object-cover border-2 border-gray-500"
+                  className="w-20 h-20 rounded-full object-cover border-2 border-purple-500/50"
                 />
                 <button
                   type="button"
                   onClick={() => setShowAvatarSelector(!showAvatarSelector)}
-                  className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition"
+                  className="px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-semibold transition"
                 >
                   {showAvatarSelector ? "Hide" : "Choose"} Avatar
                 </button>
@@ -180,8 +204,8 @@ function Login({ setIsLoggedIn }) {
                           key={opt.id}
                           className={`cursor-pointer border-2 rounded-lg overflow-hidden transition-transform transform ${
                             isSelected
-                              ? "border-blue-500 scale-105 shadow-md"
-                              : "border-gray-400 hover:border-gray-300 hover:scale-105"
+                              ? "border-purple-500 scale-105 shadow-md"
+                              : "border-gray-500 hover:border-purple-400 hover:scale-105"
                           }`}
                           onClick={() => {
                             setAvatar(avatarUrl);
@@ -209,10 +233,12 @@ function Login({ setIsLoggedIn }) {
           {isSignUp && (
             <input
               type="text"
+              name="username"
               placeholder="Username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full p-2 rounded-lg border border-gray-500 bg-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              autoComplete="username"
+              className="w-full p-2 rounded-lg border border-purple-500/30 bg-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               required
             />
           )}
@@ -220,27 +246,44 @@ function Login({ setIsLoggedIn }) {
           {/* Email and Password Inputs */}
           <input
             type="email"
+            name="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-2 rounded-lg border border-gray-500 bg-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            autoComplete="email"
+            className="w-full p-2 rounded-lg border border-purple-500/30 bg-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             required
           />
           <input
             type="password"
+            name="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-2 rounded-lg border border-gray-500 bg-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            autoComplete={isSignUp ? "new-password" : "current-password"}
+            className="w-full p-2 rounded-lg border border-purple-500/30 bg-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             required
           />
+
+          {/* Remember Me Checkbox - Only show on Login */}
+          {!isSignUp && (
+            <label className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="w-4 h-4 accent-purple-500 cursor-pointer"
+              />
+              <span>Remember me (auto-fill email and password next time)</span>
+            </label>
+          )}
 
           {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
-            className={`w-full p-3 rounded-xl font-semibold text-white transition ${
-              loading ? "bg-gray-500 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+            className={`w-full p-3 rounded-xl font-semibold text-gray-900 transition ${
+              loading ? "bg-gray-500 cursor-not-allowed" : "bg-yellow-500 hover:bg-yellow-600"
             }`}
           >
             {loading ? "Loading..." : isSignUp ? "Sign Up" : "Login"}

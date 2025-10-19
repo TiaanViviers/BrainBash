@@ -69,13 +69,15 @@ function ProfilePage({ setIsLoggedIn }) {
           return;
         }
 
-        const response = await fetch(`${API_URL}/api/users/me/matches`, {
+        const response = await fetch(`${API_URL}/api/match`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await response.json();
 
         if (data.ok) {
-          setMatchHistory(data.matches || []);
+          // Filter for finished matches only (like MyMatch but for history)
+          const finishedMatches = (data.matches || []).filter(match => match.status === 'FINISHED');
+          setMatchHistory(finishedMatches);
         } else {
           console.error("Failed to load match history:", data.error);
         }
@@ -188,7 +190,7 @@ function ProfilePage({ setIsLoggedIn }) {
           <div className="space-y-3">
             {matchHistory.map((match) => (
               <div
-                key={match.matchId}
+                key={match.match_id}
                 className="p-4 bg-[hsl(var(--card))] border border-[hsl(var(--card-border))] rounded-lg shadow hover:shadow-lg transition-all"
               >
                 <div className="flex justify-between items-start mb-3">
@@ -197,59 +199,49 @@ function ProfilePage({ setIsLoggedIn }) {
                       <h3 className="font-semibold text-lg">
                         {match.category || "Trivia"} - {match.difficulty || "Medium"} Difficulty
                       </h3>
-                      {match.winner && (
-                        <span className="flex items-center gap-1 px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded-full text-xs font-semibold">
-                          <Trophy size={12} />
-                          WINNER
-                        </span>
-                      )}
                     </div>
                     
                     <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                       <span className="flex items-center gap-1">
                         <Calendar size={14} />
-                        {new Date(match.endTime).toLocaleDateString()}
+                        {new Date(match.end_time || match.created_at).toLocaleDateString()}
                       </span>
                       <span className="flex items-center gap-1">
                         <Users size={14} />
-                        {match.placement.totalPlayers} players
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Trophy size={14} />
-                        Rank #{match.placement.rank}
+                        {match.player_count || 1} players
                       </span>
                     </div>
                   </div>
                   
                   <div className="text-right">
                     <div className="text-2xl font-bold text-[hsl(var(--primary))]">
-                      {match.myScore?.totalScore || 0}
+                      {match.status}
                     </div>
                     <div className="text-sm text-muted-foreground">
-                      {match.myScore?.correctAnswers || 0}/{match.myScore?.totalQuestions || 0} correct
+                      Match completed
                     </div>
                   </div>
                 </div>
                 
                 {/* Players list */}
                 <div className="pt-3 border-t border-[hsl(var(--card-border))]">
-                  <div className="text-sm text-muted-foreground mb-2">Final Standings:</div>
+                  <div className="text-sm text-muted-foreground mb-2">Players:</div>
                   <div className="space-y-1">
-                    {match.players.slice(0, 3).map((player, index) => (
+                    {match.match_players?.slice(0, 3).map((player, index) => (
                       <div
-                        key={player.userId}
+                        key={player.user_id}
                         className="flex justify-between items-center p-2 rounded bg-[hsl(var(--background))]"
                       >
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-medium">#{index + 1}</span>
-                          <span className="font-medium">{player.username}</span>
+                          <span className="font-medium">{player.user?.username || player.username}</span>
                         </div>
-                        <span className="font-semibold">{player.score}</span>
+                        <span className="font-semibold">{player.score || 0}</span>
                       </div>
                     ))}
-                    {match.players.length > 3 && (
+                    {match.match_players?.length > 3 && (
                       <div className="text-sm text-muted-foreground text-center py-1">
-                        +{match.players.length - 3} more players
+                        +{match.match_players.length - 3} more players
                       </div>
                     )}
                   </div>

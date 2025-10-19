@@ -97,23 +97,23 @@ function EditProfile() {
   };
 
   return (
-    <div className="min-h-screen p-6 flex justify-center">
-      <div className="w-full max-w-3xl bg-gray-800 rounded-2xl shadow-lg p-8 space-y-6">
+    <div className="min-h-screen bg-[hsl(var(--background))] p-6 flex justify-center">
+      <div className="w-full max-w-3xl bg-[hsl(var(--card))] border border-purple-500/30 rounded-2xl shadow-2xl p-8 space-y-6">
         <h1 className="text-3xl font-bold text-white text-center mb-6">Edit Profile</h1>
 
         {/* Avatar Selection */}
-        <div className="bg-gray-700 rounded-xl p-4">
+        <div className="bg-gray-700/50 rounded-xl p-4 border border-purple-500/30">
           <label className="block mb-3 font-semibold text-gray-200">Avatar</label>
           <div className="flex items-center gap-4 mb-4">
             <img
               src={avatar || 'https://via.placeholder.com/150'}
               alt="Avatar"
-              className="w-20 h-20 rounded-full object-cover border-2 border-gray-500"
+              className="w-20 h-20 rounded-full object-cover border-2 border-purple-500/50"
             />
             <button
               type="button"
               onClick={() => setShowAvatarSelector(!showAvatarSelector)}
-              className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition"
+              className="px-4 py-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-semibold transition"
             >
               {showAvatarSelector ? 'Hide' : 'Choose'} Avatar
             </button>
@@ -133,8 +133,8 @@ function EditProfile() {
                       key={avatarOption.id}
                       className={`cursor-pointer border-2 rounded-lg overflow-hidden transition-transform transform ${
                         isSelected
-                          ? 'border-blue-500 scale-105 shadow-md'
-                          : 'border-gray-400 hover:border-gray-300 hover:scale-105'
+                          ? 'border-yellow-500 scale-105 shadow-md'
+                          : 'border-purple-500/50 hover:border-purple-400 hover:scale-105'
                       }`}
                       onClick={() => {
                         setAvatar(avatarUrl);
@@ -159,18 +159,18 @@ function EditProfile() {
         </div>
 
         {/* Username Input */}
-        <div className="bg-gray-700 rounded-xl p-4">
+        <div className="bg-gray-700/50 rounded-xl p-4 border border-purple-500/30">
           <label className="block mb-2 font-semibold text-gray-200">Username</label>
           <input
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="w-full p-2 rounded-lg border border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-600 text-white"
+            className="w-full p-2 rounded-lg border border-purple-500/30 bg-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
           />
         </div>
 
         {/* Password Inputs */}
-        <div className="bg-gray-700 rounded-xl p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-gray-700/50 rounded-xl p-4 border border-purple-500/30 grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block mb-2 font-semibold text-gray-200">Current password</label>
             <input
@@ -178,7 +178,7 @@ function EditProfile() {
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
               placeholder="Enter current password"
-              className="w-full p-2 rounded-lg border border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-600 text-white"
+              className="w-full p-2 rounded-lg border border-purple-500/30 bg-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             />
           </div>
           <div>
@@ -188,7 +188,7 @@ function EditProfile() {
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               placeholder="Enter new password"
-              className="w-full p-2 rounded-lg border border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-600 text-white"
+              className="w-full p-2 rounded-lg border border-purple-500/30 bg-gray-700/50 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             />
           </div>
         </div>
@@ -198,8 +198,8 @@ function EditProfile() {
           type="button"
           onClick={handleSave}
           disabled={saving}
-          className={`w-full p-3 rounded-xl font-semibold text-white transition ${
-            saving ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
+          className={`w-full p-3 rounded-xl font-semibold text-gray-900 transition ${
+            saving ? 'bg-gray-500 cursor-not-allowed' : 'bg-yellow-500 hover:bg-yellow-600'
           }`}
         >
           {saving ? 'Saving...' : 'Save Changes'}

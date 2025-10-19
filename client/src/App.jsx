@@ -25,7 +25,7 @@ function App() {
   // Logout handler
   const handleLogout = async () => {
     try {
-      const token = localStorage.getItem("accessToken");
+      const token = localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken");
       if (token) {
         await fetch(`${API_URL}/api/auth/logout`, {
           method: "POST",
@@ -34,6 +34,9 @@ function App() {
       }
     } finally {
       localStorage.removeItem("accessToken");
+      sessionStorage.removeItem("accessToken");
+      localStorage.removeItem("currentUser");
+      sessionStorage.removeItem("currentUser");
       setIsLoggedIn(false);
       navigate("/");
     }
@@ -42,7 +45,7 @@ function App() {
   // Check auth on mount
   useEffect(() => {
     const checkAuth = async () => {
-      const token = localStorage.getItem("accessToken");
+      const token = localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken");
       if (token) {
         try {
           const response = await fetch(`${API_URL}/api/auth/me`, {
@@ -54,10 +57,12 @@ function App() {
             setUserRole(data.user.role);
           } else {
             localStorage.removeItem("accessToken");
+            sessionStorage.removeItem("accessToken");
           }
         } catch (err) {
           console.error(err);
           localStorage.removeItem("accessToken");
+          sessionStorage.removeItem("accessToken");
         }
       }
       setIsLoading(false);
@@ -69,7 +74,7 @@ function App() {
   useEffect(() => {
     const fetchUserRole = async () => {
       if (isLoggedIn) {
-        const token = localStorage.getItem('accessToken');
+        const token = localStorage.getItem('accessToken') || sessionStorage.getItem('accessToken');
         if (token) {
           try {
             const response = await fetch(`${API_URL}/api/auth/me`, {
