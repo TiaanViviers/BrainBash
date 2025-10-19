@@ -23,6 +23,8 @@ services:
           property: connectionString
       - key: JWT_SECRET
         generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
       - key: FRONTEND_URL
         value: https://brainbash-vp7y.onrender.com
     healthCheckPath: /health
