@@ -108,7 +108,7 @@ function EditProfile() {
             <img
               src={avatar || 'https://via.placeholder.com/150'}
               alt="Avatar"
-              className="w-32 h-32 rounded-full object-cover border-2 border-gray-500"
+              className="w-20 h-20 rounded-full object-cover border-2 border-gray-500"
             />
             <button
               type="button"

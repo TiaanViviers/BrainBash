@@ -151,33 +151,35 @@ export function MyMatch() {
     };
 
     return (
-      <Card className="bg-[hsl(var(--card))] border border-border/50 hover:border-[hsl(var(--primary))] shadow-lg hover:shadow-[hsl(var(--primary)/0.3)] transition-all rounded-2xl">
-        <CardContent className="p-5 space-y-3">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2">
-                <h3 className="text-lg font-semibold text-blue-400">
+      <Card className="bg-[hsl(var(--card))] border border-border/50 hover:border-[hsl(var(--primary))] shadow-lg hover:shadow-[hsl(var(--primary)/0.3)] transition-all rounded-2xl h-full flex flex-col">
+        <CardContent className="p-4 sm:p-5 space-y-3 flex-1 flex flex-col">
+          {/* Header with title and status badge */}
+          <div className="flex items-start justify-between gap-3 flex-wrap">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-2 flex-wrap">
+                <h3 className="text-base sm:text-lg font-semibold text-blue-400 truncate">
                   {match.category || "Trivia Match"}
                 </h3>
                 {isHost && (
-                  <span className="flex items-center gap-1 px-2 py-0.5 bg-yellow-500/20 text-yellow-400 rounded text-xs font-semibold">
+                  <span className="flex items-center gap-1 px-2 py-0.5 bg-yellow-500/20 text-yellow-400 rounded text-xs font-semibold whitespace-nowrap">
                     <Crown size={12} />
                     HOST
                   </span>
                 )}
               </div>
 
-              <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
-                <span className="flex items-center gap-1">
+              {/* Match details */}
+              <div className="flex flex-wrap gap-2 sm:gap-3 text-xs sm:text-sm text-muted-foreground">
+                <span className="flex items-center gap-1 whitespace-nowrap">
                   <Users size={14} />
                   {match.player_count || 1}{" "}
                   {match.player_count === 1 ? "player" : "players"}
                 </span>
-                <span className="flex items-center gap-1">
+                <span className="flex items-center gap-1 whitespace-nowrap">
                   <Trophy size={14} />
                   {match.difficulty || "Medium"}
                 </span>
-                <span className="flex items-center gap-1">
+                <span className="flex items-center gap-1 whitespace-nowrap">
                   <Calendar size={14} />
                   {new Date(
                     match.start_time || match.created_at
@@ -186,30 +188,32 @@ export function MyMatch() {
               </div>
             </div>
 
+            {/* Status badge */}
             <span
-              className={`px-3 py-1 rounded-full text-xs font-bold ${statusColors[match.status] || statusColors.SCHEDULED}`}
+              className={`px-2 sm:px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap self-start ${statusColors[match.status] || statusColors.SCHEDULED}`}
             >
               {match.status || "SCHEDULED"}
             </span>
           </div>
 
-          <div className="flex flex-wrap gap-2 mt-3">
+          {/* Action buttons - pushed to bottom */}
+          <div className="flex flex-wrap gap-2 mt-auto pt-2">
             {match.status === "SCHEDULED" && (
               <>
                 <button
                   onClick={() => handleAction("lobby")}
-                  className="flex items-center gap-1 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-medium transition"
+                  className="flex items-center justify-center gap-1 px-3 sm:px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-xs sm:text-sm font-medium transition flex-1 sm:flex-initial min-w-0"
                 >
-                  <Eye size={16} />
-                  View Lobby
+                  <Eye size={16} className="flex-shrink-0" />
+                  <span className="truncate">View Lobby</span>
                 </button>
                 {isHost && (
                   <button
                     onClick={() => handleAction("lobby")}
-                    className="flex items-center gap-1 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg text-sm font-medium transition"
+                    className="flex items-center justify-center gap-1 px-3 sm:px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg text-xs sm:text-sm font-medium transition flex-1 sm:flex-initial min-w-0"
                   >
-                    <Play size={16} />
-                    Manage Match
+                    <Play size={16} className="flex-shrink-0" />
+                    <span className="truncate">Manage</span>
                   </button>
                 )}
               </>
@@ -217,19 +221,19 @@ export function MyMatch() {
             {match.status === "ONGOING" && (
               <button
                 onClick={() => handleAction("play")}
-                className="flex items-center gap-1 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg text-sm font-medium transition"
+                className="flex items-center justify-center gap-1 px-3 sm:px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg text-xs sm:text-sm font-medium transition w-full sm:w-auto"
               >
-                <Play size={16} />
-                Join Game
+                <Play size={16} className="flex-shrink-0" />
+                <span className="truncate">Join Game</span>
               </button>
             )}
             {match.status === "FINISHED" && (
               <button
                 onClick={() => handleAction("results")}
-                className="flex items-center gap-1 px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg text-sm font-medium transition"
+                className="flex items-center justify-center gap-1 px-3 sm:px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg text-xs sm:text-sm font-medium transition w-full sm:w-auto"
               >
-                <Trophy size={16} />
-                View Results
+                <Trophy size={16} className="flex-shrink-0" />
+                <span className="truncate">View Results</span>
               </button>
             )}
           </div>
@@ -350,7 +354,7 @@ export function MyMatch() {
                         }
                         className="accent-[hsl(var(--primary))]"
                       />
-                      <span>{category}</span>
+                      <span className="text-gray-900">{category}</span>
                     </label>
                   ))}
                 </div>

@@ -238,7 +238,7 @@ function ProfilePage({ setIsLoggedIn }) {
                     {match.players.slice(0, 3).map((player, index) => (
                       <div
                         key={player.userId}
-                        className="flex justify-between items-center p-2 rounded bg-[hsl(var(--card-foreground))]"
+                        className="flex justify-between items-center p-2 rounded bg-[hsl(var(--background))]"
                       >
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-medium">#{index + 1}</span>

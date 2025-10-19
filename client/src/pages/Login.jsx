@@ -128,14 +128,14 @@ function Login({ setIsLoggedIn }) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center p-6">
+      {/* Logo - Above the login panel */}
+      <div className="flex items-center justify-center gap-3 mb-8">
+        <img src="/BrainBashIcon.png" alt="BrainBash Logo" className="h-40 w-40 shadow-lg rounded-full" />
+        <span className="text-white text-5xl md:text-4xl font-bold select-none">BrainBash</span>
+      </div>
+      
       <div className="w-full max-w-md bg-gray-800 rounded-2xl shadow-lg p-8 space-y-6">
-        {/* Logo */}
-        <div className="flex items-center justify-center gap-2 mb-4">
-          <img src="/BrainBashIcon.png" alt="BrainBash Logo" className="h-10 w-10 shadow-lg rounded-full" />
-          <span className="text-white text-xl md:text-2xl font-bold select-none">BrainBash</span>
-        </div>
-        
         <h1 className="text-3xl font-bold text-white text-center">
           {isSignUp ? "Sign Up" : "Login"}
         </h1>
