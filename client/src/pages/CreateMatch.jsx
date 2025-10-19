@@ -58,7 +58,7 @@ export function CreateMatch() {
     if (searchTerm.length >= 2) {
       const timer = setTimeout(() => fetchUsers(searchTerm), 300);
       return () => clearTimeout(timer);
-    } else if (searchTerm.length === 0) fetchUsers('a');
+    } else if (searchTerm.length === 0) fetchUsers('aa');  // Use 'aa' to meet 2-char minimum
   }, [searchTerm]);
 
   const togglePlayer = (user) => {
@@ -96,6 +96,44 @@ export function CreateMatch() {
       });
       if (!response.ok) throw new Error('Failed to create match');
       const data = await response.json();
+      
+      // Send invites to selected players
+      if (data.ok && data.matchId && selectedPlayers.length > 0) {
+        console.log(`Sending invites to ${selectedPlayers.length} players for match ${data.matchId}`);
+        
+        // Send invites in parallel
+        const invitePromises = selectedPlayers.map(player =>
+          fetch(`${API_URL}/api/invites`, {
+            method: 'POST',
+            headers: { 
+              'Authorization': `Bearer ${token}`, 
+              'Content-Type': 'application/json' 
+            },
+            body: JSON.stringify({
+              matchId: parseInt(data.matchId),
+              senderId: parseInt(currentUser.id),
+              recipientId: player.userId,
+            }),
+          })
+          .then(res => res.json())
+          .then(result => {
+            if (result.ok) {
+              console.log(`✅ Invite sent to ${player.username}`);
+            } else {
+              console.error(`❌ Failed to invite ${player.username}:`, result.error);
+            }
+            return result;
+          })
+          .catch(err => {
+            console.error(`❌ Error inviting ${player.username}:`, err);
+          })
+        );
+        
+        // Wait for all invites to complete
+        await Promise.all(invitePromises);
+        console.log('All invites sent');
+      }
+      
       if (data.ok && data.matchId) navigate(`/matchlobby/${data.matchId}`);
     } catch (error) {
       console.error(error);
