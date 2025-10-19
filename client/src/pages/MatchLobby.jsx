@@ -18,12 +18,6 @@ export function MatchLobby() {
   const { socket, isConnected } = useSocket(token);
   const isHost = matchData?.hostId === currentUser.id;
 
-  console.log('MatchLobby Debug:', {
-    matchDataHostId: matchData?.hostId,
-    currentUserId: currentUser.id,
-    isHost,
-    matchData
-  });
 
   // Listen for match start and delete events
   useEffect(() => {
@@ -34,13 +28,11 @@ export function MatchLobby() {
 
     // Listen for match started event
     const handleMatchStarted = (data) => {
-      console.log('🎮 Match started! Redirecting to match play...', data);
       navigate(`/match/${matchId}/play`);
     };
 
     // Listen for match deleted event
     const handleMatchDeleted = (data) => {
-      console.log('🗑️ Match deleted by host', data);
       alert('This match has been deleted by the host.');
       navigate('/MyMatch');
     };
@@ -99,7 +91,6 @@ export function MatchLobby() {
     }
 
     // Emit WebSocket event to start match (will broadcast to all players)
-    console.log('🎮 Host starting match via WebSocket...');
     socket.emit('match:start', { matchId: parseInt(matchId) });
     
     // Navigation will happen when we receive match:started event

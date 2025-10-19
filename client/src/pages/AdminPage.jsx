@@ -38,9 +38,9 @@ export default function AdminPage() {
   // Debug: Check if token exists
   useEffect(() => {
     if (!token) {
-      console.warn("⚠️ No authentication token found. User may need to log in.");
+      console.warn("No authentication token found. User may need to log in.");
     } else {
-      console.log("✅ Authentication token found");
+      console.log("Authentication token found");
     }
   }, [token]);
 
@@ -253,7 +253,6 @@ export default function AdminPage() {
       // Strategy: Delete old question and create new one
       // This handles the content_hash primary key issue
       
-      // Step 1: Delete the old question
       const deleteRes = await fetch(`${API_URL}/api/questions/${editingQuestion.content_hash}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
@@ -264,7 +263,6 @@ export default function AdminPage() {
         throw new Error(`Failed to delete old question: ${deleteData.error || 'Unknown error'}`);
       }
 
-      // Step 2: Create the new question with updated data
       const createRes = await fetch(`${API_URL}/api/questions`, {
         method: "POST",
         headers: { 
@@ -283,16 +281,16 @@ export default function AdminPage() {
         alert("✅ Question updated successfully!");
       } else {
         if (createRes.status === 401 || createRes.status === 403) {
-          alert("❌ Session expired. Please log in again.");
+          alert("Session expired. Please log in again.");
           localStorage.removeItem("accessToken");
           window.location.href = "/login";
         } else {
-          alert(`❌ Error: ${createData.error || 'Failed to create updated question'}\n${createData.errors ? createData.errors.join('\n') : ''}`);
+          alert(`Error: ${createData.error || 'Failed to create updated question'}\n${createData.errors ? createData.errors.join('\n') : ''}`);
         }
       }
     } catch (err) {
       console.error(err);
-      alert(`❌ Error: ${err.message}`);
+      alert(`Error: ${err.message}`);
     }
   };
 
@@ -316,7 +314,7 @@ export default function AdminPage() {
     e.preventDefault();
     try {
       if (!token) {
-        alert("❌ You are not logged in. Please log in again.");
+        alert("You are not logged in. Please log in again.");
         window.location.href = "/login";
         return;
       }
@@ -338,16 +336,16 @@ export default function AdminPage() {
         alert("✅ Category added successfully!");
       } else {
         if (res.status === 401 || res.status === 403) {
-          alert("❌ Session expired. Please log in again.");
+          alert("Session expired. Please log in again.");
           localStorage.removeItem("accessToken");
           window.location.href = "/login";
         } else {
-          alert(`❌ Error: ${data.error || 'Failed to add category'}`);
+          alert(`Error: ${data.error || 'Failed to add category'}`);
         }
       }
     } catch (err) {
       console.error(err);
-      alert(`❌ Error: ${err.message}`);
+      alert(`Error: ${err.message}`);
     }
   };
 
@@ -358,7 +356,7 @@ export default function AdminPage() {
     if (importing) return; // Prevent multiple clicks
     
     setImporting(true);
-    setImportStatus("🔄 Fetching questions from OpenTDB API... This may take 1-2 minutes...");
+    setImportStatus("Fetching questions from OpenTDB API... This may take 1-2 minutes...");
     
     try {
       const res = await fetch(`${API_URL}/api/trivia/import`, {
@@ -369,19 +367,19 @@ export default function AdminPage() {
       const data = await res.json();
       
       if (data.ok) {
-        setImportStatus(`✅ Success! Imported ${data.stats.inserted} new questions (${data.stats.skipped} duplicates skipped)`);
+        setImportStatus(`Success! Imported ${data.stats.inserted} new questions (${data.stats.skipped} duplicates skipped)`);
         // Reload questions to show the new ones
         setTimeout(() => {
           loadQuestions();
           setImportStatus("");
         }, 3000);
       } else {
-        setImportStatus(`❌ Error: ${data.error || 'Failed to import questions'}`);
+        setImportStatus(`Error: ${data.error || 'Failed to import questions'}`);
         setTimeout(() => setImportStatus(""), 5000);
       }
     } catch (err) {
       console.error(err);
-      setImportStatus(`❌ Error: ${err.message}`);
+      setImportStatus(`Error: ${err.message}`);
       setTimeout(() => setImportStatus(""), 5000);
     } finally {
       setImporting(false);
@@ -421,13 +419,13 @@ export default function AdminPage() {
       
       if (res.ok) {
         loadUsers();
-        alert("✅ User deleted successfully");
+        alert("User deleted successfully");
       } else {
-        alert(`❌ Error: ${data.error || 'Failed to delete user'}`);
+        alert(`Error: ${data.error || 'Failed to delete user'}`);
       }
     } catch (err) {
       console.error(err);
-      alert(`❌ Error: ${err.message}`);
+      alert(`Error: ${err.message}`);
     }
   };
 
@@ -548,9 +546,9 @@ export default function AdminPage() {
       {/* Import Status Message */}
       {importStatus && (
         <div className={`mb-4 p-3 rounded-lg text-sm ${
-          importStatus.includes('✅') 
+          importStatus.includes('Success') 
             ? 'bg-green-500/20 border border-green-500 text-green-400'
-            : importStatus.includes('❌')
+            : importStatus.includes('Error')
             ? 'bg-red-500/20 border border-red-500 text-red-400'
             : 'bg-purple-500/20 border border-purple-500 text-purple-400'
         }`}>
@@ -567,7 +565,7 @@ export default function AdminPage() {
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
-              setCurrentPage(1); // Reset to page 1 when searching
+              setCurrentPage(1);
             }}
             className="flex-1 px-4 py-2 bg-gray-700/50 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
           />

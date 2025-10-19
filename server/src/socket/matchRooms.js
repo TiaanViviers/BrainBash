@@ -55,8 +55,6 @@ export async function handleJoinMatch(io, socket, data) {
     const roomName = `match:${matchId}`;
     socket.join(roomName);
 
-    console.log(`👥 ${socket.username} joined match ${matchId}`);
-
     // Notify user they successfully joined
     socket.emit('match:joined', {
       matchId,
@@ -95,8 +93,6 @@ export async function handleLeaveMatch(io, socket, data) {
 
     // Leave the room
     socket.leave(roomName);
-
-    console.log(`👋 ${socket.username} left match ${matchId}`);
 
     // Notify others in the room
     socket.to(roomName).emit('player:left', {
@@ -141,5 +137,4 @@ export async function getActivePlayersInMatch(io, matchId) {
 export function broadcastToMatch(io, matchId, event, data) {
   const roomName = `match:${matchId}`;
   io.to(roomName).emit(event, data);
-  console.log(`📡 Broadcast ${event} to match ${matchId}`);
 }

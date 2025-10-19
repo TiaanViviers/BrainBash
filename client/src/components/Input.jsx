@@ -1,3 +1,16 @@
+/**
+ * Input component for text entry with styled appearance and dark mode support.
+ */
+
+/**
+ * Styled input field component.
+ * @param {Object} props - Component props
+ * @param {string} props.value - Input value
+ * @param {Function} props.onChange - Change event handler
+ * @param {string} props.placeholder - Placeholder text
+ * @param {string} props.className - Additional CSS classes
+ * @returns {JSX.Element} Input element
+ */
 export function Input({ value, onChange, placeholder, className = "" }) {
   return (
     <input

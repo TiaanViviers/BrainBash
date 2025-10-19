@@ -24,8 +24,7 @@ async function importQuestions() {
   console.log('  Trivia Question Import Tool');
   console.log('═══════════════════════════════════════════════\n');
   
-  console.log('📡 Fetching questions from OpenTDB API...');
-  console.log('   (This may take a minute due to API rate limits)\n');
+  console.log('Fetching questions from OpenTDB API...');
   
   try {
     // Fetch questions from OpenTDB
@@ -51,29 +50,24 @@ async function importQuestions() {
       return acc;
     }, {});
     
-    console.log('📊 Questions by category:');
+    console.log('Questions by category:');
     Object.entries(byCategory).forEach(([cat, count]) => {
       console.log(`   ${cat.padEnd(20)} ${count}`);
     });
     console.log('');
     
     // Insert into database
-    console.log('💾 Inserting questions into database...\n');
+    console.log('Inserting questions into database...\n');
     
     const result = await upsertQuestions(batch);
     
     console.log('═══════════════════════════════════════════════');
-    console.log('✅ Import Complete!');
+    console.log('Import Complete');
     console.log('═══════════════════════════════════════════════');
-    console.log(`   Inserted: ${result.inserted} new questions`);
-    console.log(`   Skipped:  ${result.skipped} (already in database)`);
-    console.log('');
-    console.log('💡 View questions:');
-    console.log('   make db-studio    (opens Prisma Studio GUI)');
-    console.log('');
+ 
     
   } catch (error) {
-    console.error('\n❌ Error importing questions:', error.message);
+    console.error('\nError importing questions:', error.message);
     console.error(error);
     throw error;
   }

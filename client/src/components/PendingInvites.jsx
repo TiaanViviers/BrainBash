@@ -1,8 +1,17 @@
+/**
+ * Component for displaying and managing pending match invitations.
+ * Automatically polls for new invites and allows accepting or declining them.
+ */
+
 import { Bell, Check, Clock, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API_URL from '../config';
 
+/**
+ * PendingInvites component displays a list of match invitations.
+ * @returns {JSX.Element|null} Invites list or null if no invites
+ */
 export function PendingInvites() {
   const [invites, setInvites] = useState([]);
   const [loading, setLoading] = useState(true);

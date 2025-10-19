@@ -1216,20 +1216,20 @@ curl http://localhost:3000/api/match/1/scoreboard
 
 ### Frontend
 
-✅ **Track response time accurately** - Start timer when question loads  
-✅ **Disable submit after answering** - Prevent duplicate submissions  
-✅ **Show correct answer immediately** - After submission  
-✅ **Use WebSocket for real-time** - HTTP polling is inefficient  
-✅ **Handle network errors gracefully** - Retry logic for answer submission  
-✅ **Visual feedback on correctness** - Green/red highlighting  
+**Track response time accurately** - Start timer when question loads  
+**Disable submit after answering** - Prevent duplicate submissions  
+**Show correct answer immediately** - After submission  
+**Use WebSocket for real-time** - HTTP polling is inefficient  
+**Handle network errors gracefully** - Retry logic for answer submission  
+**Visual feedback on correctness** - Green/red highlighting  
 
 ### Backend
 
-✅ **Use transactions** - Match creation and finish operations  
-✅ **Validate all inputs** - Player IDs, question IDs, match status  
-✅ **Store everything in DB** - No in-memory state (scalability)  
-✅ **Calculate points server-side** - Never trust client timing  
-✅ **Emit WebSocket events** - Keep all clients synchronized  
+**Use transactions** - Match creation and finish operations  
+**Validate all inputs** - Player IDs, question IDs, match status  
+**Store everything in DB** - No in-memory state (scalability)  
+**Calculate points server-side** - Never trust client timing  
+**Emit WebSocket events** - Keep all clients synchronized  
 
 ---
 
@@ -1299,9 +1299,9 @@ curl http://localhost:3000/api/match/1/scoreboard
 
 ### Potential Bottlenecks
 
-⚠️ **getCurrentQuestionIndex()** - Counts answers per question (can be cached)  
-⚠️ **finishMatch()** - Many database operations (use transaction)  
-⚠️ **Large matches** - 50 questions × 10 players = 500 answer records  
+**getCurrentQuestionIndex()** - Counts answers per question (can be cached)  
+**finishMatch()** - Many database operations (use transaction)  
+**Large matches** - 50 questions × 10 players = 500 answer records  
 
 ### Recommended Improvements
 

@@ -886,47 +886,6 @@ make import-questions
 
 ---
 
-### Requirement: "Automatically scrape questions"
-
-**Implementation:**
-- ✅ Automated fetching from OpenTDB API
-- ✅ No manual question entry required
-- ✅ 126+ questions imported per run
-- ✅ Scheduled/repeatable imports
-
-### Requirement: "Proper error handling"
-
-**Implementation:**
-- ✅ Network error retry logic
-- ✅ API error handling (response codes)
-- ✅ Database error handling (duplicates)
-- ✅ Graceful degradation
-
-### Requirement: "Deduplication"
-
-**Implementation:**
-- ✅ Content hash primary key
-- ✅ Upsert strategy (skip if exists)
-- ✅ Safe re-imports (idempotent)
-
-### Requirement: "Rate limiting"
-
-**Implementation:**
-- ✅ 600ms delay between requests
-- ✅ Exponential backoff on errors
-- ✅ Handles 429 Too Many Requests
-- ✅ Token-based session management
-
-### Requirement: "Progress reporting"
-
-**Implementation:**
-- ✅ Console output with emojis
-- ✅ Statistics (inserted vs. skipped)
-- ✅ Category breakdown
-- ✅ Success/failure messages
-
----
-
 ## Future Enhancements
 
 ### Suggested Improvements
@@ -1017,7 +976,7 @@ This trivia import system was developed as part of the CS343 Trivia Tournament p
 - `server/src/trivia/trivia-db.js` - Database batch operations
 
 **Bonus Mark Feature:**
-- ✅ **10 marks** for automated question scraping from OpenTDB API
+- **10 marks** for automated question scraping from OpenTDB API
 - Fully implemented with error handling, rate limiting, and deduplication
 - Production-ready with progress reporting and idempotent imports
 

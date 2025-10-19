@@ -1,7 +1,20 @@
+/**
+ * Dialog component for inviting players to a match.
+ * Displays a searchable list of users and allows sending match invitations.
+ */
+
 import { Search, UserPlus, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import API_URL from '../config';
 
+/**
+ * InvitePlayerDialog modal component.
+ * @param {Object} props - Component props
+ * @param {number} props.matchId - ID of the match to invite players to
+ * @param {boolean} props.isOpen - Whether the dialog is visible
+ * @param {Function} props.onClose - Callback to close the dialog
+ * @returns {JSX.Element|null} Dialog element or null if not open
+ */
 export function InvitePlayerDialog({ matchId, isOpen, onClose }) {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');

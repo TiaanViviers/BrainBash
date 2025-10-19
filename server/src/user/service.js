@@ -174,7 +174,7 @@ export async function getMyProfile(userId) {
   return {
     userId: user.user_id,
     username: user.username,
-    email: user.email, // Include email for own profile
+    email: user.email,
     avatarUrl: user.avatar_url,
     status: user.status,
     role: user.role,
@@ -249,23 +249,19 @@ export async function updateProfile(userId, updates) {
 
   // Update password if requested
   if (newPassword) {
-    // Verify current password is provided
     if (!currentPassword) {
       throw new Error('Current password is required to change password');
     }
 
-    // Verify current password is correct
     const isValidPassword = await bcrypt.compare(currentPassword, user.password_hash);
     if (!isValidPassword) {
       throw new Error('Current password is incorrect');
     }
 
-    // Validate new password strength
     if (newPassword.length < 8) {
       throw new Error('New password must be at least 8 characters long');
     }
 
-    // Hash new password (using 12 rounds per project spec)
     const saltRounds = 12;
     updateData.password_hash = await bcrypt.hash(newPassword, saltRounds);
   }
@@ -300,7 +296,7 @@ export async function getMatchHistory(userId, { limit = 10, offset = 0 } = {}) {
           user_id: userId
         }
       },
-      status: 'FINISHED' // Only show completed matches
+      status: 'FINISHED'
     },
     include: {
       match_players: {
@@ -388,8 +384,6 @@ export async function deleteAccount(userId, password) {
     throw new Error('Incorrect password');
   }
 
-  // Anonymize user (keep match history intact)
-  // Note: Set to impossible-to-guess hash instead of null (schema requirement)
   const deletedHash = await bcrypt.hash(`DELETED_${userId}_${Date.now()}`, 12);
   
   await prisma.users.update({
@@ -418,7 +412,6 @@ export async function adminDeleteUser(userId) {
     throw new Error('User not found');
   }
 
-  // Anonymize user (keep match history intact)
   const deletedHash = await bcrypt.hash(`DELETED_${userId}_${Date.now()}`, 12);
   
   await prisma.users.update({

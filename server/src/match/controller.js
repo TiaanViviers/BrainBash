@@ -10,9 +10,7 @@ export const getUserFromToken = async (authHeader) => {
   const token = authHeader.replace('Bearer ', '');
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    console.log('JWT payload:', payload); // Debug log
     
-    // The JWT payload contains 'id', not 'userId'
     const userId = Number(payload.id);
     
     if (!userId || isNaN(userId)) {
@@ -53,18 +51,15 @@ export const create = async (req, res) => {
 
     const { category, difficulty, amount, title, scheduledStart, players } = req.body;
 
-    console.log('Creating match:', { category, difficulty, amount, players, userId: user.user_id });
 
     if (!category || !difficulty || !amount) {
       return res.status(400).json({ error: 'Category, difficulty, and amount are required' });
     }
 
     // Ensure host is in players array
-    // Note: user object has user_id, not id
     const allPlayers = players && players.length ? players.map(Number) : [];
     if (!allPlayers.includes(user.user_id)) allPlayers.push(user.user_id);
 
-    console.log('All players:', allPlayers);
 
     // Create match via service
     const result = await matchService.createMatch({
@@ -77,7 +72,6 @@ export const create = async (req, res) => {
       scheduledStart: scheduledStart ? new Date(scheduledStart) : null
     });
 
-    console.log('Match created:', result);
 
     res.json({ ok: true, matchId: result.matchId, match: result });
   } catch (err) {

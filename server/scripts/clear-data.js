@@ -15,11 +15,10 @@ import { PrismaClient } from '../src/generated/prisma/index.js';
 const prisma = new PrismaClient();
 
 async function clearAllData() {
-  console.log('🗑️  Clearing all data from database...\n');
+  console.log('Clearing all data from database...\n');
   
   try {
     // Delete in correct order (children first, parents last)
-    // This respects foreign key constraints
     
     console.log('   Deleting player answers...');
     await prisma.player_answers.deleteMany();
@@ -54,14 +53,10 @@ async function clearAllData() {
     console.log('   Deleting categories...');
     await prisma.categories.deleteMany();
     
-    console.log('\n✅ All data cleared successfully!');
-    console.log('   Tables still exist and ready for new data.');
-    console.log('\n💡 Next steps:');
-    console.log('   - make db-seed          (add sample users & categories)');
-    console.log('   - make import-questions (import questions from OpenTDB)');
+    console.log('\nAll data cleared successfully!');
     
   } catch (error) {
-    console.error('\n❌ Error clearing data:', error.message);
+    console.error('\nError clearing data:', error.message);
     throw error;
   } finally {
     await prisma.$disconnect();

@@ -1249,20 +1249,20 @@ curl -X DELETE "http://localhost:3000/api/invites/1?userId=2" \
 
 ### Frontend
 
-✅ **Show pending count** - Badge on navigation for pending invites  
-✅ **Real-time updates** - Use WebSocket to refresh on new invites  
-✅ **Confirmation dialogs** - Confirm before accepting/declining  
-✅ **Disable after action** - Prevent duplicate accepts/declines  
-✅ **Show invite context** - Display match details in invitation  
-✅ **Filter by status** - Separate tabs for pending/accepted/declined  
+**Show pending count** - Badge on navigation for pending invites  
+**Real-time updates** - Use WebSocket to refresh on new invites  
+**Confirmation dialogs** - Confirm before accepting/declining  
+**Disable after action** - Prevent duplicate accepts/declines  
+**Show invite context** - Display match details in invitation  
+**Filter by status** - Separate tabs for pending/accepted/declined  
 
 ### Backend
 
-✅ **Atomic operations** - Use transactions for accept (invite + player)  
-✅ **Cascade deletes** - Clean up invites when match/user deleted  
-✅ **Validation first** - Check all conditions before database writes  
-✅ **Authorization checks** - Verify user can perform action  
-✅ **Descriptive errors** - Clear messages for each failure case  
+**Atomic operations** - Use transactions for accept (invite + player)  
+**Cascade deletes** - Clean up invites when match/user deleted  
+**Validation first** - Check all conditions before database writes  
+**Authorization checks** - Verify user can perform action  
+**Descriptive errors** - Clear messages for each failure case  
 
 ---
 

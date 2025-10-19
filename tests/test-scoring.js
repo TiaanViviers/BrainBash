@@ -333,7 +333,7 @@ async function testCompleteMatchStatistics() {
       include: { user: true },
     });
 
-    logInfo(`\n  📊 Final Scores:`);
+    logInfo(`\n  Final Scores:`);
     for (const score of scores) {
       logInfo(`    ${score.user.username}: ${score.total_score} points`);
       logInfo(`      - Correct: ${score.correct_answers}/${score.total_questions}`);

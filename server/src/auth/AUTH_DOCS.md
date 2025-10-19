@@ -898,29 +898,29 @@ node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
 
 ### Implemented
 
-✅ **Bcrypt with 12+ rounds** - Exceeds project spec requirement  
-✅ **HTTP-Only cookies** - Refresh tokens not accessible via JavaScript  
-✅ **Secure cookies** - HTTPS-only in production  
-✅ **SameSite cookies** - CSRF protection  
-✅ **Password validation** - Enforced strength requirements  
-✅ **Email validation** - RFC-compliant regex  
-✅ **Constant-time comparison** - bcrypt.compare() prevents timing attacks  
-✅ **JWT expiry** - Short-lived access tokens reduce risk window  
-✅ **Role-based access control** - Admin endpoints protected  
-✅ **Prepared statements** - Prisma prevents SQL injection  
+**Bcrypt with 12+ rounds** - Exceeds project spec requirement  
+**HTTP-Only cookies** - Refresh tokens not accessible via JavaScript  
+**Secure cookies** - HTTPS-only in production  
+**SameSite cookies** - CSRF protection  
+**Password validation** - Enforced strength requirements  
+**Email validation** - RFC-compliant regex  
+**Constant-time comparison** - bcrypt.compare() prevents timing attacks  
+**JWT expiry** - Short-lived access tokens reduce risk window  
+**Role-based access control** - Admin endpoints protected  
+**Prepared statements** - Prisma prevents SQL injection  
 
 ### Production Recommendations
 
-🔒 **Rate limiting** - Implement on login/register endpoints (e.g., express-rate-limit)  
-🔒 **HTTPS only** - Always use TLS in production  
-🔒 **Strong secrets** - Use cryptographically random JWT secrets (64+ bytes)  
-🔒 **Token rotation** - Consider rotating refresh tokens on use  
-🔒 **Account lockout** - Lock accounts after N failed login attempts  
-🔒 **Email verification** - Verify email addresses before activation  
-🔒 **Password reset** - Implement secure password reset flow  
-🔒 **Audit logging** - Log authentication events for security monitoring  
-🔒 **CORS configuration** - Restrict origins in production  
-🔒 **Helmet.js** - Add security headers  
+**Rate limiting** - Implement on login/register endpoints (e.g., express-rate-limit)  
+**HTTPS only** - Always use TLS in production  
+**Strong secrets** - Use cryptographically random JWT secrets (64+ bytes)  
+**Token rotation** - Consider rotating refresh tokens on use  
+**Account lockout** - Lock accounts after N failed login attempts  
+**Email verification** - Verify email addresses before activation  
+**Password reset** - Implement secure password reset flow  
+**Audit logging** - Log authentication events for security monitoring  
+**CORS configuration** - Restrict origins in production  
+**Helmet.js** - Add security headers  
 
 ---
 

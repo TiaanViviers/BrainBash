@@ -44,7 +44,7 @@ export async function getRandomQuestions(req, res) {
     
     const questions = await service.getRandomQuestions({
       category,
-      difficulty: difficulty.toUpperCase(), // Convert to uppercase for Prisma enum
+      difficulty: difficulty.toUpperCase(),
       amount: numAmount
     });
     
@@ -254,7 +254,7 @@ export async function createQuestion(req, res) {
     
     const question = await service.createQuestion({
       category_id: parseInt(category_id),
-      difficulty: difficulty.toUpperCase(), // Convert to uppercase for database
+      difficulty: difficulty.toUpperCase(),
       question_text: question_text.trim(),
       correct_answer: correct_answer.trim(),
       wrong_answer_1: wrong_answer_1.trim(),
@@ -333,8 +333,6 @@ export async function updateQuestion(req, res) {
     }
     
     if (question_text !== undefined) {
-      // Note: question_text cannot be updated (would change content_hash)
-      // This is handled in the service layer
       if (typeof question_text !== 'string' || question_text.trim().length === 0) {
         return res.status(400).json({
           ok: false,

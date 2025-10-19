@@ -1,11 +1,27 @@
+/**
+ * Tabs component system for organizing content into switchable panels.
+ * Provides Tabs, TabsList, TabsTrigger, and TabsContent components.
+ */
+
 import React, { useState } from "react";
 
-// small className helper
+/**
+ * Utility function to merge class names.
+ * @param {...string} classes - Class names to merge
+ * @returns {string} Merged class string
+ */
 function cn(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-// Root container
+/**
+ * Root tabs container component.
+ * @param {Object} props - Component props
+ * @param {string} props.defaultValue - Initial active tab value
+ * @param {React.ReactNode} props.children - Child components
+ * @param {string} props.className - Additional CSS classes
+ * @returns {JSX.Element} Tabs container
+ */
 export function Tabs({ defaultValue, children, className = "" }) {
   const [active, setActive] = useState(defaultValue);
 
@@ -21,7 +37,13 @@ export function Tabs({ defaultValue, children, className = "" }) {
   );
 }
 
-// Tabs list container
+/**
+ * Container for tab trigger buttons.
+ * @param {Object} props - Component props
+ * @param {React.ReactNode} props.children - TabsTrigger components
+ * @param {string} props.className - Additional CSS classes
+ * @returns {JSX.Element} Tabs list container
+ */
 export function TabsList({ children, className = "" }) {
   return (
     <div
@@ -35,7 +57,16 @@ export function TabsList({ children, className = "" }) {
   );
 }
 
-// Single tab button
+/**
+ * Individual tab button that switches active tab.
+ * @param {Object} props - Component props
+ * @param {string} props.value - Tab identifier value
+ * @param {string} props.active - Currently active tab value
+ * @param {Function} props.setActive - Function to set active tab
+ * @param {React.ReactNode} props.children - Button content
+ * @param {string} props.className - Additional CSS classes
+ * @returns {JSX.Element} Tab trigger button
+ */
 export function TabsTrigger({ value, active, setActive, children, className = "" }) {
   const isActive = active === value;
 
@@ -55,7 +86,15 @@ export function TabsTrigger({ value, active, setActive, children, className = ""
   );
 }
 
-// Content of a tab
+/**
+ * Content panel for a tab, shown when tab is active.
+ * @param {Object} props - Component props
+ * @param {string} props.value - Tab identifier value
+ * @param {string} props.active - Currently active tab value
+ * @param {React.ReactNode} props.children - Panel content
+ * @param {string} props.className - Additional CSS classes
+ * @returns {JSX.Element|null} Tab content or null if not active
+ */
 export function TabsContent({ value, active, children, className = "" }) {
   if (active !== value) return null;
 

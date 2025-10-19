@@ -16,7 +16,6 @@ import { upsertQuestions } from './trivia-db.js';
  */
 export async function importQuestionsFromAPI(req, res) {
   try {
-    console.log('🔄 Starting trivia import from API...');
     
     // Fetch questions from OpenTDB
     const batch = await generateSeedBatch({
@@ -29,8 +28,8 @@ export async function importQuestionsFromAPI(req, res) {
         'History'
       ],
       difficulties: ['easy', 'medium', 'hard'],
-      perDifficulty: 7,  // 7 per difficulty = 21 per category = 126 total
-      rateLimitMs: 600   // Small delay between requests to respect API limits
+      perDifficulty: 7,
+      rateLimitMs: 600
     });
     
     console.log(`✓ Fetched ${batch.length} unique questions from OpenTDB`);
@@ -41,19 +40,12 @@ export async function importQuestionsFromAPI(req, res) {
       return acc;
     }, {});
     
-    console.log('\nBreakdown by category:');
     Object.entries(byCategory).forEach(([cat, count]) => {
       console.log(`  ${cat}: ${count}`);
     });
     
     // Insert into database (with deduplication)
-    console.log('\n💾 Inserting into database...');
     const result = await upsertQuestions(batch);
-    
-    console.log(`\n✅ Import Complete!`);
-    console.log(`   Total processed: ${batch.length}`);
-    console.log(`   New questions: ${result.inserted}`);
-    console.log(`   Duplicates skipped: ${result.skipped}`);
     
     // Return success response
     res.json({
@@ -68,7 +60,7 @@ export async function importQuestionsFromAPI(req, res) {
     });
     
   } catch (error) {
-    console.error('❌ Error importing questions:', error);
+    console.error('Error importing questions:', error);
     res.status(500).json({
       ok: false,
       error: 'Failed to import questions',

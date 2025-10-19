@@ -236,8 +236,12 @@ After running `make db-seed`, you can log in with:
 
 | Email | Password | Role |
 |-------|----------|------|
-| `admin@test.com` | `admin123` | Admin |
-| `user@test.com` | `user123` | User |
+| `admin@bb.com` | `Admin1234` | Admin |
+| `tiaan@bb.com` | `Tiaan1234` | Player |
+| `jaiden@bb.com` | `Jaiden1234` | Player |
+| `lenz@bb.com` | `Lenz1234` | Player |
+| `shalome@bb.com` | `Shalome1234` | Player |
+| `neil@bb.com` | `Neil1234` | Player |
 
 ---
 
@@ -329,9 +333,39 @@ Detailed API documentation is available in each module:
 
 ---
 
+## Live Demo
+
+**Deployed Application**: https://brainbash-vp7y.onrender.com
+
+The application is deployed on Render.com with:
+- **Frontend**: Static site (React build)
+- **Backend**: Node.js service
+- **Database**: PostgreSQL (managed)
+
+**Demo Credentials**:
+- **Admin**: `admin@bb.com` / `Admin1234`
+- **Test Users**: `tiaan@bb.com`, `jaiden@bb.com`, `lenz@bb.com`, etc. (Password: `<Name>1234`)
+
+**Note**: The free tier has a cold start delay (~30-60 seconds) after 15 minutes of inactivity.
+
+---
+
 ## Production Deployment
 
-### Build
+### Deployed on Render.com
+
+This project uses Infrastructure as Code via `render.yaml` for automatic deployment.
+
+**Services**:
+1. **PostgreSQL Database** (`brainbash-db`)
+2. **Backend API** (`brainbash-server`) - Node.js at https://brainbash-server.onrender.com
+3. **Frontend** (`brainbash`) - Static site at https://brainbash-vp7y.onrender.com
+
+**Auto-deployment**: Pushes to `main` branch trigger automatic redeployment.
+
+### Manual Deployment
+
+#### Build
 
 ```bash
 make build
@@ -345,8 +379,19 @@ Set these for production:
 NODE_ENV=production
 DATABASE_URL=<production-postgres-url>
 JWT_SECRET=<strong-random-secret>
-PORT=3000
+JWT_REFRESH_SECRET=<strong-random-secret>
+PORT=10000
+FRONTEND_URL=<your-frontend-url>
+API_URL=<your-backend-url>
+VITE_API_URL=<your-backend-url>
 ```
+
+**Required Environment Variables**:
+- `JWT_SECRET` - Access token signing key (auto-generated on Render)
+- `JWT_REFRESH_SECRET` - Refresh token signing key (auto-generated on Render)
+- `DATABASE_URL` - PostgreSQL connection string (provided by Render database)
+- `FRONTEND_URL` - For CORS configuration
+- `VITE_API_URL` - Frontend API endpoint
 
 ### Start Production Server
 
@@ -355,7 +400,7 @@ cd server
 npm start
 ```
 
-Serve the `client/dist` folder with a static file server (Nginx, Vercel, Netlify, etc.).
+Serve the `client/dist` folder with a static file server (Nginx, Vercel, Netlify, Render, etc.).
 
 ---
 

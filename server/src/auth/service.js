@@ -8,7 +8,7 @@
  * 
  * Security features:
  * - bcrypt with 12 salt rounds (per project spec: ≥12)
- * - Access tokens (15 min expiry)
+ * - Access tokens (24h expiry)
  * - Refresh tokens (7 day expiry)
  * - Email validation
  * - Password strength requirements
@@ -22,7 +22,7 @@ import { PrismaClient } from '../generated/prisma/index.js';
 const prisma = new PrismaClient();
 
 // Token expiry times
-const ACCESS_TOKEN_EXPIRY = '24h';  // Extended for demos/testing
+const ACCESS_TOKEN_EXPIRY = '24h';
 const REFRESH_TOKEN_EXPIRY = '7d';
 
 // Password requirements
@@ -355,7 +355,6 @@ export async function loginUser({ email, password }) {
  * @throws {Error} If refresh token is invalid
  */
 export async function refreshAccessToken(refreshToken) {
-  // Verify refresh token
   const decoded = verifyRefreshToken(refreshToken);
   
   // Get user from database

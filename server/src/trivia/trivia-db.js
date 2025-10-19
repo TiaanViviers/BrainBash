@@ -71,9 +71,7 @@ export async function upsertQuestions(batch) {
   const categoryNames = [...new Set(batch.map(item => item.category_name))];
   
   // Ensure all categories exist in DB (creates them if missing)
-  console.log('   Ensuring categories exist in database...');
   const CATEGORIES = await ensureCategories(categoryNames);
-  console.log(`   ✓ ${categoryNames.length} categories ready\n`);
   
   let inserted = 0;
   let skipped = 0;

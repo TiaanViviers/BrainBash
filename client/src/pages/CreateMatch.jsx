@@ -99,7 +99,6 @@ export function CreateMatch() {
       
       // Send invites to selected players
       if (data.ok && data.matchId && selectedPlayers.length > 0) {
-        console.log(`Sending invites to ${selectedPlayers.length} players for match ${data.matchId}`);
         
         // Send invites in parallel
         const invitePromises = selectedPlayers.map(player =>
@@ -118,20 +117,18 @@ export function CreateMatch() {
           .then(res => res.json())
           .then(result => {
             if (result.ok) {
-              console.log(`✅ Invite sent to ${player.username}`);
             } else {
-              console.error(`❌ Failed to invite ${player.username}:`, result.error);
+              console.error(`Failed to invite ${player.username}:`, result.error);
             }
             return result;
           })
           .catch(err => {
-            console.error(`❌ Error inviting ${player.username}:`, err);
+            console.error(`Error inviting ${player.username}:`, err);
           })
         );
         
         // Wait for all invites to complete
         await Promise.all(invitePromises);
-        console.log('All invites sent');
       }
       
       if (data.ok && data.matchId) navigate(`/matchlobby/${data.matchId}`);

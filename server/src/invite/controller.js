@@ -15,7 +15,6 @@ import * as inviteService from './service.js';
 export async function sendInvite(req, res, next) {
   try {
     const { matchId, recipientId, senderId } = req.body;
-    console.log('[INVITE] Creating invite:', { matchId, recipientId, senderId });
 
     // Validation
     if (!matchId || !recipientId || !senderId) {
@@ -74,7 +73,6 @@ export async function sendInvite(req, res, next) {
 export async function getReceivedInvites(req, res, next) {
   try {
     const { userId, status } = req.query;
-    console.log('[INVITE] Fetching received invites for userId:', userId);
 
     if (!userId) {
       return res.status(400).json({
@@ -102,7 +100,6 @@ export async function getReceivedInvites(req, res, next) {
     // Convert status to uppercase for database enum
     const upperStatus = status ? status.toUpperCase() : null;
     const invites = await inviteService.getReceivedInvites(parsedUserId, upperStatus);
-    console.log('[INVITE] Found invites:', invites.length, 'invites for user', parsedUserId);
 
     res.json({
       ok: true,

@@ -27,7 +27,6 @@ export function initializeSocket(httpServer) {
     pingInterval: 25000
   });
 
-  console.log('🔌 WebSocket server initialized');
 
   // Authentication middleware
   io.use(async (socket, next) => {
@@ -46,7 +45,6 @@ export function initializeSocket(httpServer) {
       }
 
       // Attach user info to socket
-      // Note: JWT payload uses 'id' field, not 'userId'
       socket.userId = decoded.id;
       socket.username = decoded.username;
       socket.role = decoded.role;
@@ -60,14 +58,12 @@ export function initializeSocket(httpServer) {
 
   // Connection handler
   io.on('connection', (socket) => {
-    console.log(`✅ Client connected: ${socket.username} (${socket.userId})`);
 
     // Set up match-related event handlers
     handleMatchEvents(io, socket);
 
     // Handle disconnection
     socket.on('disconnect', (reason) => {
-      console.log(`❌ Client disconnected: ${socket.username} - ${reason}`);
     });
 
     // Handle errors

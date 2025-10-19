@@ -109,19 +109,19 @@ export function SyncedTimer({ socket, matchId, onTimeUp }) {
       {/* Messages */}
       {isCritical && timeRemaining > 0 && (
         <p className="text-center text-sm text-red-600 font-semibold animate-pulse">
-          ⚠️ Hurry up! Time is running out.
+          Hurry up! Time is running out.
         </p>
       )}
 
       {timeRemaining === 0 && (
         <p className="text-center text-sm text-gray-500">
-          ⏰ Time's up! Moving to next question...
+          Time's up! Moving to next question...
         </p>
       )}
 
       {!isActive && timeRemaining > 0 && (
         <p className="text-center text-sm text-gray-400">
-          ⏸️ Timer paused
+          Timer paused
         </p>
       )}
     </div>

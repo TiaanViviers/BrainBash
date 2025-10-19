@@ -86,14 +86,12 @@ export async function createMatch({ category, difficulty, amount = 10, players, 
   }
 
   // Get random questions from the Question service
-  console.log(`[MATCH] Requesting ${amount} questions for ${category} (${difficulty})`);
   const questions = await questionService.getRandomQuestions({
     category,
     difficulty: difficulty.toUpperCase(),
     amount
   });
 
-  console.log(`[MATCH] Received ${questions.length} questions from service`);
   
   if (questions.length === 0) {
     throw new Error(`No questions available for ${category} at ${difficulty} difficulty`);
@@ -107,17 +105,15 @@ export async function createMatch({ category, difficulty, amount = 10, players, 
 
   // Create match in transaction
   const match = await prisma.$transaction(async (tx) => {
-    // 1. Create match
     const newMatch = await tx.matches.create({
       data: {
         host_id: hostId || players[0],
-        status: 'SCHEDULED', // Use SCHEDULED for matches waiting to start
+        status: 'SCHEDULED',
         difficulty: difficulty.toUpperCase(),
         start_time: new Date()
       }
     });
 
-    // 2. Create single round (simplified - one round per match for now)
     const round = await tx.match_rounds.create({
       data: {
         match_id: newMatch.match_id,
@@ -127,19 +123,16 @@ export async function createMatch({ category, difficulty, amount = 10, players, 
       }
     });
 
-    // 3. Create match questions with shuffled options
-    console.log(`[MATCH] Inserting ${questions.length} questions into match`);
     for (let i = 0; i < questions.length; i++) {
       const q = questions[i];
-      console.log(`[MATCH] Inserting question ${i + 1}/${questions.length}`);
       
       await tx.match_questions.create({
         data: {
           match_id: newMatch.match_id,
-          content_hash: q.id, // This is the content_hash from trivia_questions
+          content_hash: q.id,
           round_id: round.round_id,
           question_number: i + 1,
-          correct_option: q.options[q.correctIndex], // Store the correct answer text
+          correct_option: q.options[q.correctIndex],
           option_a: q.options[0],
           option_b: q.options[1],
           option_c: q.options[2],
@@ -147,9 +140,7 @@ export async function createMatch({ category, difficulty, amount = 10, players, 
         }
       });
     }
-    console.log(`[MATCH] ✅ Successfully inserted ${questions.length} questions`);
 
-    // 4. Add players
     for (const userId of players) {
       await tx.match_players.create({
         data: {
@@ -193,11 +184,10 @@ async function getCurrentQuestionIndex(matchId) {
     });
 
     if (answerCount < playerCount) {
-      return q.question_number - 1; // 0-indexed
+      return q.question_number - 1;
     }
   }
 
-  // All questions answered
   return questions.length;
 }
 
@@ -228,7 +218,7 @@ export async function getPublicState(matchId) {
             select: {
               user_id: true,
               username: true,
-              avatar_url: true  // Added avatar_url
+              avatar_url: true
             }
           }
         }
@@ -269,8 +259,8 @@ export async function getPublicState(matchId) {
     players: match.match_players.map(p => ({
       userId: p.user.user_id,
       username: p.user.username,
-      avatar: p.user.avatar_url,  // Added avatar
-      avatarUrl: p.user.avatar_url,  // Also add avatarUrl for consistency
+      avatar: p.user.avatar_url,
+      avatarUrl: p.user.avatar_url,
       score: p.score
     }))
   };
@@ -311,8 +301,8 @@ async function calculatePoints(matchQuestionId, responseTimeMs) {
   // If not the fastest, apply penalty
   if (responseTimeMs > fastestTime) {
     const timeDifference = responseTimeMs - fastestTime;
-    const penalty = Math.floor(timeDifference / 100); // -1 point per 100ms
-    points = Math.max(10, points - penalty); // Minimum 10 points
+    const penalty = Math.floor(timeDifference / 100);
+    points = Math.max(10, points - penalty);
   }
 
   // Cap at 100 points maximum
@@ -389,8 +379,7 @@ export async function submitAnswer(matchId, { userId, matchQuestionId, selectedO
   if (isCorrect && responseTimeMs) {
     pointsAwarded = await calculatePoints(matchQuestionId, responseTimeMs);
   } else if (isCorrect) {
-    // Fallback if no response time provided (shouldn't happen with WebSocket)
-    pointsAwarded = 50; // Half points for missing timing data
+    pointsAwarded = 50;
   }
 
   // Save answer and update score in transaction
@@ -455,11 +444,9 @@ export async function nextQuestion(matchId) {
   const currentIndex = await getCurrentQuestionIndex(matchId);
   const total = match.match_questions.length;
 
-  console.log(`[MATCH] nextQuestion: currentIndex=${currentIndex}, total=${total}`);
 
   // Check if match should be finished (all questions answered)
   if (currentIndex >= total) {
-    console.log(`[MATCH] ✅ All questions answered, finishing match`);
     await finishMatch(matchId);
     return { 
       index: total, 
@@ -468,7 +455,6 @@ export async function nextQuestion(matchId) {
     };
   }
 
-  console.log(`[MATCH] ➡️  Advancing to question ${currentIndex + 1}/${total}`);
   return { 
     index: currentIndex + 1, 
     finished: false,
@@ -507,7 +493,6 @@ export async function finishMatch(matchId) {
     // Calculate average response time and correct answers for each player
     const playerStats = await Promise.all(
       players.map(async (player) => {
-        // Get all answers for this player in this match
         const answers = await tx.player_answers.findMany({
           where: {
             user_id: player.user_id,
@@ -541,10 +526,6 @@ export async function finishMatch(matchId) {
       })
     );
 
-    // Determine winner(s) - tie-breaking per spec:
-    // 1. Highest score
-    // 2. Most correct answers
-    // 3. Fastest average response time
     const maxScore = Math.max(...playerStats.map(p => p.score));
     const topScorers = playerStats.filter(p => p.score === maxScore);
     
@@ -559,13 +540,11 @@ export async function finishMatch(matchId) {
       if (mostCorrect.length === 1) {
         winners = mostCorrect;
       } else {
-        // Final tie-break by average response time (faster is better)
         const withResponseTimes = mostCorrect.filter(p => p.avgResponseTime !== null);
         if (withResponseTimes.length > 0) {
           const minTime = Math.min(...withResponseTimes.map(p => p.avgResponseTime));
           winners = withResponseTimes.filter(p => p.avgResponseTime === minTime);
         } else {
-          // All tied, all are winners
           winners = mostCorrect;
         }
       }
@@ -573,11 +552,9 @@ export async function finishMatch(matchId) {
 
     const winnerIds = new Set(winners.map(w => w.user_id));
 
-    // Create scores records and update user stats
     for (const playerStat of playerStats) {
       const isWinner = winnerIds.has(playerStat.user_id);
 
-      // Upsert score record with detailed stats (in case it already exists)
       await tx.scores.upsert({
         where: {
           match_id_user_id: {
@@ -701,7 +678,7 @@ export async function getScoreboard(matchId) {
       userId: p.user.user_id,
       username: p.user.username,
       avatar: p.user.avatar_url,
-      avatarUrl: p.user.avatar_url,  // Add avatarUrl for consistency
+      avatarUrl: p.user.avatar_url,
       score: p.score
     })),
     finished: match.status === 'FINISHED',
@@ -747,12 +724,10 @@ export async function deleteMatch(matchId, userId) {
 
   // Delete in transaction to ensure consistency
   await prisma.$transaction(async (tx) => {
-    // 1. Delete all invitations for this match
     await tx.match_invites.deleteMany({
       where: { match_id: matchId }
     });
 
-    // 2. Delete player answers (if any)
     await tx.player_answers.deleteMany({
       where: {
         match_question: {
@@ -761,27 +736,22 @@ export async function deleteMatch(matchId, userId) {
       }
     });
 
-    // 3. Delete match questions (cascades to player_answers if not already deleted)
     await tx.match_questions.deleteMany({
       where: { match_id: matchId }
     });
 
-    // 4. Delete match players
     await tx.match_players.deleteMany({
       where: { match_id: matchId }
     });
 
-    // 5. Delete match rounds
     await tx.match_rounds.deleteMany({
       where: { match_id: matchId }
     });
 
-    // 6. Delete scores (if any)
     await tx.scores.deleteMany({
       where: { match_id: matchId }
     });
 
-    // 7. Finally, delete the match itself
     await tx.matches.delete({
       where: { match_id: matchId }
     });

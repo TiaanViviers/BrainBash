@@ -38,7 +38,7 @@ export async function register(req, res) {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+      maxAge: 7 * 24 * 60 * 60 * 1000
     });
     
     res.status(201).json({
@@ -108,7 +108,7 @@ export async function login(req, res) {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+      maxAge: 7 * 24 * 60 * 60 * 1000
     });
     
     res.json({
@@ -208,8 +208,6 @@ export async function logout(req, res) {
     
   } catch (error) {
     console.error('Logout error:', error);
-    
-    // Still clear cookie even if database update fails
     res.clearCookie('refreshToken');
     
     res.status(500).json({

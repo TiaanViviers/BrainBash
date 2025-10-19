@@ -16,7 +16,7 @@ app.set('io', io);
 
 // Start server
 httpServer.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
   console.log(`   HTTP API: http://localhost:${PORT}`);
   console.log(`   WebSocket: ws://localhost:${PORT}`);
 });

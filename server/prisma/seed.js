@@ -2,7 +2,7 @@
  * seed.js
  *
  * Purpose:
- * - Seeds the database with initial users for development
+ * - Seeds the database with initial users
  * - Creates an admin user and several regular player users
  *
  * Prerequisites:
@@ -87,7 +87,7 @@ async function main() {
     }
   ];
 
-  console.log('👥 Creating users...');
+  console.log('Creating users...');
   
   for (const userData of users) {
     const user = await prisma.users.upsert({
@@ -110,8 +110,6 @@ async function main() {
       }
     });
     
-    console.log(`  ✓ ${user.role === 'ADMIN' ? '👑' : '👤'} ${user.username} (${user.email})`);
-    
     // Create user_stats entry for each user
     await prisma.user_stats.upsert({
       where: { user_id: user.user_id },
@@ -126,7 +124,7 @@ async function main() {
     });
   }
 
-  console.log('\nDatabase seeding complete!\n');
+  console.log('\nDatabase seeding complete\n');
   console.log(' Login credentials:');
   console.log('   Admin: admin@bb.com / Admin1234');
   console.log('   Tiaan: tiaan@bb.com / Tiaan1234');
@@ -134,11 +132,6 @@ async function main() {
   console.log('   Lenz: lenz@bb.com / Lenz1234');
   console.log('   Shalome: shalome@bb.com / Shalome1234');
   console.log('   Neil: neil@bb.com / Neil1234');
-  console.log('\n Next steps:');
-  console.log('   1. Import questions: make import-questions');
-  console.log('   2. Start the server: make dev-server');
-  console.log('   3. Start the client: make dev-client');
-  console.log('   4. Login as Admin and use the admin panel!\n');
 }
 
 main()

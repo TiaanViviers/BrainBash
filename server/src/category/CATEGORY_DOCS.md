@@ -1070,19 +1070,18 @@ export async function getAllCategories() {
 
 ### Frontend
 
-✅ **Cache categories** - Fetch once on app load, store in context/state  
-✅ **Validate inputs** - Check name length before submitting  
-✅ **Confirm deletes** - Always prompt user before deletion  
-✅ **Show question counts** - Help users pick categories with enough questions  
-✅ **Handle errors gracefully** - Show user-friendly messages  
+**Cache categories** - Fetch once on app load, store in context/state  **Validate inputs** - Check name length before submitting  
+**Confirm deletes** - Always prompt user before deletion  
+**Show question counts** - Help users pick categories with enough questions  
+**Handle errors gracefully** - Show user-friendly messages  
 
 ### Backend
 
-✅ **Trim inputs** - Remove leading/trailing whitespace from names  
-✅ **Validate constraints** - Check length limits before database call  
-✅ **Use transactions** - Not needed currently, but prepare for future  
-✅ **Log errors** - Console.error all caught exceptions  
-✅ **Return consistent format** - Always use `{ ok, ... }` structure  
+**Trim inputs** - Remove leading/trailing whitespace from names  
+**Validate constraints** - Check length limits before database call  
+**Use transactions** - Not needed currently, but prepare for future  
+**Log errors** - Console.error all caught exceptions  
+**Return consistent format** - Always use `{ ok, ... }` structure  
 
 ---
 

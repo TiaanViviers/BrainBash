@@ -71,8 +71,8 @@ function assignSyntheticDifficulties(items, difficulties, perDifficulty) {
     const d = difficulties[i % difficulties.length];
     buckets[d].push({
       ...item,
-      difficulty: d,                 // override label
-      difficulty_source: 'synthetic' // annotate for transparency (optional)
+      difficulty: d,
+      difficulty_source: 'synthetic'
     });
     i++;
   }

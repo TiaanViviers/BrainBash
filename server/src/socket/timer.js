@@ -27,7 +27,6 @@ export function startQuestionTimer(io, matchId, matchQuestionId, duration = DEFA
 
   let timeRemaining = duration;
   
-  console.log(`⏱️  Starting ${duration}s timer for match ${matchId}, question ${matchQuestionId}`);
 
   // Initial broadcast
   broadcastToMatch(io, matchId, 'timer:start', {
@@ -50,7 +49,6 @@ export function startQuestionTimer(io, matchId, matchQuestionId, duration = DEFA
       serverTime: Date.now()
     });
 
-    console.log(`⏱️  Match ${matchId} timer: ${timeRemaining}s remaining`);
 
     // Timer expired
     if (timeRemaining <= 0) {
@@ -79,7 +77,6 @@ export function stopQuestionTimer(matchId) {
   if (timer) {
     clearInterval(timer.interval);
     activeTimers.delete(matchId);
-    console.log(`⏹️  Stopped timer for match ${matchId}`);
   }
 }
 
@@ -100,7 +97,6 @@ export function pauseQuestionTimer(io, matchId) {
       timeRemaining: timer.timeRemaining
     });
     
-    console.log(`⏸️  Paused timer for match ${matchId} at ${timer.timeRemaining}s`);
   }
 }
 
@@ -115,7 +111,6 @@ export function resumeQuestionTimer(io, matchId) {
   
   if (timer && !timer.interval) {
     startQuestionTimer(io, matchId, timer.matchQuestionId, timer.timeRemaining);
-    console.log(`▶️  Resumed timer for match ${matchId}`);
   }
 }
 
@@ -149,7 +144,6 @@ export function isTimerActive(matchId) {
  * @param {number} matchQuestionId - Question ID
  */
 async function handleTimerExpired(io, matchId, matchQuestionId) {
-  console.log(`⏰ Timer expired for match ${matchId}, question ${matchQuestionId}`);
 
   // Import here to avoid circular dependency
   const { PrismaClient } = await import('../generated/prisma/index.js');
@@ -183,7 +177,6 @@ async function handleTimerExpired(io, matchId, matchQuestionId) {
         }))
       });
 
-      console.log(`⏭️  Created skip answers for ${unansweredPlayers.length} players who didn't answer`);
     }
   } catch (error) {
     console.error('Error creating skip answers:', error);
@@ -214,7 +207,6 @@ async function handleTimerExpired(io, matchId, matchQuestionId) {
         timestamp: new Date()
       });
 
-      console.log(`📊 Broadcasted scoreboard for match ${matchId} after timer expiry`);
 
       // Auto-advance to next question
       const result = await nextQuestion(matchId);
@@ -228,7 +220,6 @@ async function handleTimerExpired(io, matchId, matchQuestionId) {
           timestamp: new Date()
         });
 
-        console.log(`🏁 Match ${matchId} finished (timer auto-advanced)`);
       } else {
         // Get next question from service
         const { getPublicState } = await import('../match/service.js');
@@ -246,7 +237,6 @@ async function handleTimerExpired(io, matchId, matchQuestionId) {
         // Start timer for new question
         startQuestionTimer(io, matchId, state.question.id, DEFAULT_QUESTION_TIME);
 
-        console.log(`⏭️  Match ${matchId} auto-advanced to question ${state.index + 1}`);
       }
     } catch (error) {
       console.error(`Error auto-advancing match ${matchId}:`, error);
@@ -254,7 +244,7 @@ async function handleTimerExpired(io, matchId, matchQuestionId) {
         message: 'Failed to advance to next question'
       });
     }
-  }, 3000); // 3 second delay to show "time's up" message
+  }, 3000);
 }
 
 /**
@@ -263,7 +253,6 @@ async function handleTimerExpired(io, matchId, matchQuestionId) {
 export function cleanupAllTimers() {
   for (const [matchId, timer] of activeTimers.entries()) {
     clearInterval(timer.interval);
-    console.log(`🧹 Cleaned up timer for match ${matchId}`);
   }
   activeTimers.clear();
 }

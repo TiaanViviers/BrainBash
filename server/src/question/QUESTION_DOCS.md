@@ -867,39 +867,6 @@ node server/src/trivia/import.js
    - Creates categories if missing
    - Reports inserted/skipped counts
 
-#### Import Output Example
-
-```
-═══════════════════════════════════════════════
-  Trivia Question Import Tool
-═══════════════════════════════════════════════
-
-📡 Fetching questions from OpenTDB API...
-   (This may take a minute due to API rate limits)
-
-✓ Fetched 126 unique questions from OpenTDB
-
-📊 Questions by category:
-   Science              21
-   History              21
-   Geography            21
-   Entertainment        21
-   Sports               21
-   General Knowledge    21
-
-💾 Inserting questions into database...
-
-═══════════════════════════════════════════════
-✅ Import Complete!
-═══════════════════════════════════════════════
-   Inserted: 126 new questions
-   Skipped:  0 (already in database)
-
-💡 View questions:
-   make db-studio    (opens Prisma Studio GUI)
-```
-
----
 
 ## Service Layer Functions
 
@@ -1196,25 +1163,25 @@ node server/src/trivia/import.js
 
 ### Question Creation
 
-✅ **Use content hashing** - Ensures uniqueness  
-✅ **Validate all 4 answers** - Must be unique  
-✅ **Trim whitespace** - Clean data  
-✅ **Check category exists** - Foreign key constraint  
-✅ **Use descriptive questions** - Clear and unambiguous  
+**Use content hashing** - Ensures uniqueness  
+**Validate all 4 answers** - Must be unique  
+**Trim whitespace** - Clean data  
+**Check category exists** - Foreign key constraint  
+**Use descriptive questions** - Clear and unambiguous  
 
 ### Admin Operations
 
-✅ **Protect deletions** - Check match usage first  
-✅ **Paginate large lists** - Don't fetch all questions  
-✅ **Search before create** - Avoid duplicates  
-✅ **Log admin actions** - Audit trail (future enhancement)  
+**Protect deletions** - Check match usage first  
+**Paginate large lists** - Don't fetch all questions  
+**Search before create** - Avoid duplicates  
+**Log admin actions** - Audit trail (future enhancement)  
 
 ### Match Integration
 
-✅ **Shuffle options** - Different order each match  
-✅ **Don't reveal correctIndex to client** - Security  
-✅ **Cache question counts** - For statistics display  
-✅ **Handle insufficient questions** - Return fewer if needed  
+**Shuffle options** - Different order each match  
+**Don't reveal correctIndex to client** - Security  
+**Cache question counts** - For statistics display  
+**Handle insufficient questions** - Return fewer if needed  
 
 ---
 
@@ -1258,9 +1225,9 @@ node server/src/trivia/import.js
 
 ### Potential Bottlenecks
 
-⚠️ **Text search** - LIKE queries can be slow on large datasets  
-⚠️ **Random selection** - ORDER BY RANDOM() is O(n)  
-⚠️ **Import rate limiting** - 600ms delay per category (necessary for API)  
+**Text search** - LIKE queries can be slow on large datasets  
+**Random selection** - ORDER BY RANDOM() is O(n)  
+**Import rate limiting** - 600ms delay per category (necessary for API)  
 
 ### Recommended Improvements
 
@@ -1353,9 +1320,9 @@ This question/trivia system was developed as part of the CS343 Trivia Tournament
 - Admin dashboard (frontend) - CRUD interface
 
 **Bonus Mark Features:**
-- ✅ Automated question scraping from OpenTDB API (10 marks)
-- ✅ Content deduplication with SHA-1 hashing
-- ✅ Batch import with progress reporting
-- ✅ Rate limiting and retry logic
+- Automated question scraping from OpenTDB API (10 marks)
+- Content deduplication with SHA-1 hashing
+- Batch import with progress reporting
+- Rate limiting and retry logic
 
 **Last Updated:** 15 October 2025

@@ -33,18 +33,18 @@ export async function getAvatars(req, res, next) {
         return imageExtensions.includes(ext);
       })
       .map(file => {
-        const name = path.parse(file).name; // filename without extension
+        const name = path.parse(file).name;
         const ext = path.extname(file).toLowerCase();
         
         return {
-          id: name.toLowerCase().replace(/\s+/g, '-'), // Convert to URL-friendly ID
+          id: name.toLowerCase().replace(/\s+/g, '-'),
           name: name,
           filename: file,
-          url: `/api/avatars/${file}`, // URL to serve the image
+          url: `/api/avatars/${file}`,
           extension: ext
         };
       })
-      .sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
+      .sort((a, b) => a.name.localeCompare(b.name));
 
     res.json({
       ok: true,
@@ -73,10 +73,8 @@ export async function getAvatarImage(req, res, next) {
       });
     }
     
-    // Handle case-insensitive filename matching
     let actualFilename = filename;
     
-    // If the filename doesn't have an extension, try to find the actual file
     if (!path.extname(filename)) {
       try {
         const files = await fs.readdir(AVATARS_DIR);
@@ -88,13 +86,11 @@ export async function getAvatarImage(req, res, next) {
           actualFilename = foundFile;
         }
       } catch (error) {
-        // If we can't read the directory, continue with original filename
       }
     }
     
     const filePath = path.join(AVATARS_DIR, actualFilename);
     
-    // Check if file exists
     try {
       await fs.access(filePath);
     } catch (error) {
@@ -104,7 +100,6 @@ export async function getAvatarImage(req, res, next) {
       });
     }
     
-    // Set appropriate headers for image serving
     const ext = path.extname(actualFilename).toLowerCase();
     const mimeTypes = {
       '.png': 'image/png',
@@ -117,7 +112,7 @@ export async function getAvatarImage(req, res, next) {
     
     const mimeType = mimeTypes[ext] || 'application/octet-stream';
     res.setHeader('Content-Type', mimeType);
-    res.setHeader('Cache-Control', 'public, max-age=3600'); // Cache for 1 hour
+    res.setHeader('Cache-Control', 'public, max-age=3600');
     
     // Send the file
     res.sendFile(filePath);

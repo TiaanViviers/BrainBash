@@ -428,9 +428,9 @@ function Leaderboard() {
             <div className="player-info">
               <h3>{player.username}</h3>
               <div className="stats">
-                <span>🏆 {player.totalScore.toLocaleString()} pts</span>
-                <span>🎯 {player.accuracy}% accuracy</span>
-                <span>🎮 {player.gamesWon}/{player.gamesPlayed} wins</span>
+                <span>{player.totalScore.toLocaleString()} pts</span>
+                <span>{player.accuracy}% accuracy</span>
+                <span>{player.gamesWon}/{player.gamesPlayed} wins</span>
               </div>
             </div>
           </div>
@@ -862,12 +862,12 @@ CREATE INDEX idx_scores_user_id ON scores(user_id);
 
 ### Current Implementation
 
-⚠️ **Expensive Operations:**
+**Expensive Operations:**
 - Weekly/daily leaderboards aggregate on every request
 - User rank queries load entire leaderboard (up to 10,000 records)
 - Category filtering requires joins through match_rounds
 
-✅ **Optimized:**
+**Optimized:**
 - All-time leaderboard uses pre-aggregated user_stats
 - Pagination limits result set size
 - Database indexes on score columns
@@ -975,21 +975,21 @@ curl "http://localhost:3000/api/leaderboard/user/3?context=5"
 
 ### Frontend
 
-✅ **Cache leaderboard data** - Refresh every 30-60 seconds  
-✅ **Show loading states** - Leaderboard queries can be slow  
-✅ **Highlight current user** - If they appear in the list  
-✅ **Use pagination** - Don't load thousands of players at once  
-✅ **Show rank badges** - Gold/silver/bronze for top 3  
-✅ **Add filters prominently** - Period and category selectors  
+**Cache leaderboard data** - Refresh every 30-60 seconds  
+**Show loading states** - Leaderboard queries can be slow  
+**Highlight current user** - If they appear in the list  
+**Use pagination** - Don't load thousands of players at once  
+**Show rank badges** - Gold/silver/bronze for top 3  
+**Add filters prominently** - Period and category selectors  
 
 ### Backend
 
-✅ **Add database indexes** - On score columns and foreign keys  
-✅ **Implement caching** - Redis for frequently accessed leaderboards  
-✅ **Limit result sets** - Max 500 players per query  
-✅ **Use pagination** - Don't return entire leaderboard  
-✅ **Consider materialized views** - For weekly/daily leaderboards  
-✅ **Monitor query performance** - Log slow queries  
+**Add database indexes** - On score columns and foreign keys  
+**Implement caching** - Redis for frequently accessed leaderboards  
+**Limit result sets** - Max 500 players per query  
+**Use pagination** - Don't return entire leaderboard  
+**Consider materialized views** - For weekly/daily leaderboards  
+**Monitor query performance** - Log slow queries  
 
 ---
 

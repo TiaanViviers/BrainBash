@@ -23,11 +23,7 @@ import * as authService from './service.js';
 export function authenticateToken(req, res, next) {
   // Get token from Authorization header
   const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
-  
-  console.log('[AUTH] Request to:', req.method, req.originalUrl || req.url);
-  console.log('[AUTH] Authorization header:', authHeader ? 'Present' : 'MISSING');
-  console.log('[AUTH] Extracted token:', token ? `${token.substring(0, 20)}...` : 'NONE');
+  const token = authHeader && authHeader.split(' ')[1];
   
   if (!token) {
     return res.status(401).json({
@@ -40,8 +36,6 @@ export function authenticateToken(req, res, next) {
   try {
     // Verify token and extract payload
     const decoded = authService.verifyAccessToken(token);
-    
-    // Attach user info to request
     req.user = {
       id: decoded.id,
       username: decoded.username,
@@ -127,8 +121,7 @@ export function optionalAuth(req, res, next) {
       role: decoded.role
     };
   } catch (error) {
-    // Token invalid, but that's ok for optional auth
-    // Just continue without user
+    // Token invalid, ok for optional auth
   }
   
   next();

@@ -78,11 +78,11 @@ const socket = io('http://localhost:3000', {
 
 // Connection events
 socket.on('connect', () => {
-  console.log('✅ Connected to WebSocket server');
+  console.log('Connected to WebSocket server');
 });
 
 socket.on('disconnect', (reason) => {
-  console.log('❌ Disconnected:', reason);
+  console.log(' Disconnected:', reason);
   if (reason === 'io server disconnect') {
     // Server disconnected client, attempt manual reconnect
     socket.connect();
@@ -438,7 +438,7 @@ Timer reached 0.
 **Broadcast to All Players:**
 ```javascript
 socket.on('timer:expired', (data) => {
-  console.log('⏰ Time is up!');
+  console.log(' Time is up!');
   // data: { matchId, matchQuestionId, message, timestamp }
   
   // Show "Time's Up!" message
@@ -492,7 +492,7 @@ export function useMatchSocket(matchId) {
 
     // Connection events
     newSocket.on('connect', () => {
-      console.log('✅ WebSocket connected');
+      console.log('WebSocket connected');
       setIsConnected(true);
       
       // Auto-join match room
@@ -503,7 +503,7 @@ export function useMatchSocket(matchId) {
     });
 
     newSocket.on('disconnect', (reason) => {
-      console.log('❌ Disconnected:', reason);
+      console.log('Disconnected:', reason);
       setIsConnected(false);
     });
 
@@ -550,7 +550,7 @@ export function useMatchSocket(matchId) {
     });
 
     newSocket.on('timer:expired', () => {
-      console.log('⏰ Time is up!');
+      console.log('Time is up!');
       setTimeRemaining(0);
     });
 
@@ -639,7 +639,7 @@ function MatchLobby() {
       <h1>Match Lobby</h1>
       
       <div className={`connection-status ${isConnected ? 'connected' : 'disconnected'}`}>
-        {isConnected ? '🟢 Connected' : '🔴 Disconnected'}
+        {isConnected ? 'Connected' : 'Disconnected'}
       </div>
 
       <div className="match-info">
@@ -653,8 +653,8 @@ function MatchLobby() {
         {matchState.players?.map((player) => (
           <div key={player.userId} className="player-item">
             <span>{player.username}</span>
-            {player.userId === matchState.hostId && <span className="host-badge">👑 Host</span>}
-            {player.isReady && <span className="ready-badge">✅ Ready</span>}
+            {player.userId === matchState.hostId && <span className="host-badge"> Host</span>}
+            {player.isReady && <span className="ready-badge">Ready</span>}
           </div>
         ))}
       </div>
@@ -822,7 +822,7 @@ function MatchPlay() {
       {/* Answer Result */}
       {answered && answerResult && (
         <div className={`result ${answerResult.isCorrect ? 'correct' : 'wrong'}`}>
-          <h3>{answerResult.isCorrect ? '✅ Correct!' : '❌ Wrong!'}</h3>
+          <h3>{answerResult.isCorrect ? 'Correct!' : ' Wrong!'}</h3>
           {answerResult.isCorrect && (
             <p>Points earned: {answerResult.points}</p>
           )}
@@ -832,7 +832,7 @@ function MatchPlay() {
       {/* Host Controls */}
       {isHost && (
         <button onClick={handleAdvance} className="advance-button">
-          ⏭️ Next Question
+          Next Question
         </button>
       )}
 
@@ -999,7 +999,7 @@ const socket = io('http://localhost:3000', {
 });
 
 socket.on('connect', () => {
-  console.log('✅ Connected');
+  console.log('Connected');
   
   // Join match
   socket.emit('match:join', { matchId: 1, userId: 1 });
@@ -1039,23 +1039,23 @@ socket.on('timer:tick', (data) => {
 
 ### Frontend
 
-✅ **Reconnection handling** - Enable automatic reconnection  
-✅ **Token refresh** - Reconnect with new token on expiry  
-✅ **Visual feedback** - Show connection status indicator  
-✅ **Error handling** - Display error messages to user  
-✅ **Cleanup** - Disconnect socket on component unmount  
-✅ **Event unsubscribe** - Remove listeners in useEffect cleanup  
-✅ **Room management** - Emit `match:leave` before disconnect  
+**Reconnection handling** - Enable automatic reconnection  
+**Token refresh** - Reconnect with new token on expiry  
+**Visual feedback** - Show connection status indicator  
+**Error handling** - Display error messages to user  
+**Cleanup** - Disconnect socket on component unmount  
+**Event unsubscribe** - Remove listeners in useEffect cleanup  
+**Room management** - Emit `match:leave` before disconnect  
 
 ### Backend
 
-✅ **Authentication** - Always validate JWT tokens  
-✅ **Authorization** - Check host status for restricted actions  
-✅ **Room isolation** - Use rooms to prevent cross-match leaks  
-✅ **Error broadcasting** - Send specific error messages  
-✅ **Logging** - Console log all major events  
-✅ **Timer cleanup** - Clear intervals on match end  
-✅ **Database validation** - Verify match/player exists  
+**Authentication** - Always validate JWT tokens  
+**Authorization** - Check host status for restricted actions  
+**Room isolation** - Use rooms to prevent cross-match leaks  
+**Error broadcasting** - Send specific error messages  
+**Logging** - Console log all major events  
+**Timer cleanup** - Clear intervals on match end  
+**Database validation** - Verify match/player exists  
 
 ---
 
@@ -1098,10 +1098,10 @@ socket.on('timer:tick', (data) => {
 
 ### Potential Bottlenecks
 
-⚠️ **Many concurrent matches** - Each match has active timer interval  
-⚠️ **Large player counts** - Broadcasting overhead scales with players  
-⚠️ **Database queries per event** - Auth checks hit database  
-⚠️ **Timer accuracy** - JavaScript timers not guaranteed precise  
+**Many concurrent matches** - Each match has active timer interval  
+**Large player counts** - Broadcasting overhead scales with players  
+**Database queries per event** - Auth checks hit database  
+**Timer accuracy** - JavaScript timers not guaranteed precise  
 
 ### Recommended Improvements
 
@@ -1198,14 +1198,14 @@ PORT=3000
 
 ### Production Checklist
 
-✅ **Use WSS (secure WebSocket)** - Enable TLS/SSL  
-✅ **Configure proper CORS** - Whitelist production domains  
-✅ **Enable Redis adapter** - For multi-server scaling  
-✅ **Set connection limits** - Prevent resource exhaustion  
-✅ **Monitor active connections** - Track socket count  
-✅ **Implement rate limiting** - Prevent spam/abuse  
-✅ **Log all events** - For debugging and analytics  
-✅ **Graceful shutdown** - Close sockets on server stop  
+**Use WSS (secure WebSocket)** - Enable TLS/SSL  
+**Configure proper CORS** - Whitelist production domains  
+**Enable Redis adapter** - For multi-server scaling  
+**Set connection limits** - Prevent resource exhaustion  
+**Monitor active connections** - Track socket count  
+**Implement rate limiting** - Prevent spam/abuse  
+**Log all events** - For debugging and analytics  
+**Graceful shutdown** - Close sockets on server stop  
 
 ### Scaling with Redis
 
@@ -1255,12 +1255,12 @@ This WebSocket system was developed as part of the CS343 Trivia Tournament proje
 - Frontend React app - Socket.io-client
 
 **Key Features Implemented:**
-- ✅ JWT authentication for all connections
-- ✅ Room-based match isolation
-- ✅ Server-controlled synchronized timers (20s)
-- ✅ Auto-advance on timer expiry
-- ✅ Host-only controls with validation
-- ✅ Real-time scoreboard updates
-- ✅ Player presence tracking
+- JWT authentication for all connections
+- Room-based match isolation
+- Server-controlled synchronized timers (20s)
+- Auto-advance on timer expiry
+- Host-only controls with validation
+- Real-time scoreboard updates
+- Player presence tracking
 
 **Last Updated:** 15 October 2025

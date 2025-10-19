@@ -82,8 +82,6 @@ export function handleMatchEvents(io, socket) {
         }
       });
 
-      console.log(`🎮 Match ${matchId} started by ${socket.username}`);
-
       // Get first question
       const state = await getPublicState(matchId);
 
@@ -115,7 +113,6 @@ export function handleMatchEvents(io, socket) {
     try {
       const { matchId } = data;
 
-      console.log(`🗑️  Match ${matchId} deleted by ${socket.username}`);
 
       // Broadcast to all players in the match room
       broadcastToMatch(io, matchId, 'match:deleted', {
@@ -173,7 +170,6 @@ export function handleMatchEvents(io, socket) {
           timestamp: new Date()
         });
 
-        console.log(`🏁 Match ${matchId} finished`);
       } else {
         // Get new question
         const state = await getPublicState(matchId);
@@ -191,7 +187,6 @@ export function handleMatchEvents(io, socket) {
           startQuestionTimer(io, matchId, state.question.id, 20);
         }
 
-        console.log(`❓ Match ${matchId} advanced to question ${state.index + 1}`);
       }
 
     } catch (error) {
@@ -236,7 +231,6 @@ export function handleMatchEvents(io, socket) {
         timestamp: new Date()
       });
 
-      console.log(`📝 ${socket.username} answered question in match ${matchId} - ${result.isCorrect ? '✓ Correct' : '✗ Wrong'}`);
 
       // Check if all players have answered
       const allAnswered = await checkAllPlayersAnswered(matchId, matchQuestionId);
@@ -263,7 +257,6 @@ export function handleMatchEvents(io, socket) {
           timestamp: new Date()
         });
 
-        console.log(`✅ All players answered question ${matchQuestionId} in match ${matchId}`);
       }
 
     } catch (error) {

@@ -41,13 +41,11 @@ export function useSocket(token) {
 
     // Connection handlers
     socket.on('connect', () => {
-      console.log('✅ WebSocket connected');
       setIsConnected(true);
       setError(null);
     });
 
     socket.on('disconnect', (reason) => {
-      console.log('❌ WebSocket disconnected:', reason);
       setIsConnected(false);
       
       if (reason === 'io server disconnect') {
@@ -69,7 +67,6 @@ export function useSocket(token) {
 
     // Cleanup on unmount
     return () => {
-      console.log('🔌 Disconnecting WebSocket');
       socket.disconnect();
       socketRef.current = null;
     };

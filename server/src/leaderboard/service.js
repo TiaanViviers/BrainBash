@@ -38,12 +38,12 @@ export async function getLeaderboard({ period, category, limit, page }) {
     players = result.players;
     total = result.total;
   } else if (period === 'weekly') {
-    // Weekly leaderboard - last 7 days
+    // Weekly leaderboard
     const result = await getWeeklyLeaderboard({ category, limit, skip });
     players = result.players;
     total = result.total;
   } else if (period === 'daily') {
-    // Daily leaderboard - last 24 hours
+    // Daily leaderboard
     const result = await getDailyLeaderboard({ category, limit, skip });
     players = result.players;
     total = result.total;
@@ -103,7 +103,7 @@ async function getAllTimeLeaderboard({ category, limit, skip }) {
       orderBy: [
         { total_score: 'desc' },
         { games_won: 'desc' },
-        { avg_response_time: 'asc' } // Faster response as tiebreaker
+        { avg_response_time: 'asc' }
       ],
       skip,
       take: limit
@@ -114,19 +114,19 @@ async function getAllTimeLeaderboard({ category, limit, skip }) {
   const players = stats.map(stat => ({
     userId: stat.user.user_id,
     username: stat.user.username,
-    avatarUrl: stat.user.avatar_url,  // Changed from 'avatar' to 'avatarUrl'
+    avatarUrl: stat.user.avatar_url,
     totalScore: stat.total_score,
     gamesPlayed: stat.games_played,
     gamesWon: stat.games_won,
     averageScore: stat.average_score,
     highestScore: stat.highest_score,
-    highScore: stat.highest_score,  // Add alias for consistency
+    highScore: stat.highest_score,
     correctAnswers: stat.correct_answers,
     totalAnswers: stat.total_answers,
     accuracy: stat.total_answers > 0 
       ? Math.round((stat.correct_answers / stat.total_answers) * 100) 
       : 0,
-    avgResponseTime: stat.avg_response_time,  // Add camelCase alias
+    avgResponseTime: stat.avg_response_time,
     averageResponseTime: stat.avg_response_time,
     bestCategory: stat.category?.name || null,
     memberSince: stat.user.created_at
@@ -142,15 +142,13 @@ async function getWeeklyLeaderboard({ category, limit, skip }) {
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
   
-  // Base where clause for matches in last 7 days
   const matchWhere = {
     end_time: {
       gte: sevenDaysAgo
     },
-    status: MatchStatus.COMPLETED // Only count finished matches
+    status: MatchStatus.COMPLETED
   };
   
-  // If category filter, add it
   if (category) {
     const categoryRecord = await prisma.categories.findUnique({
       where: { name: category },
@@ -161,7 +159,6 @@ async function getWeeklyLeaderboard({ category, limit, skip }) {
       throw new Error(`Category '${category}' not found`);
     }
     
-    // Need to join through match_rounds to filter by category
     matchWhere.match_rounds = {
       some: {
         category_id: categoryRecord.category_id
@@ -194,7 +191,6 @@ async function getWeeklyLeaderboard({ category, limit, skip }) {
     }
   });
   
-  // Aggregate by user
   const userScores = new Map();
   
   scores.forEach(score => {
@@ -203,7 +199,7 @@ async function getWeeklyLeaderboard({ category, limit, skip }) {
       userScores.set(userId, {
         userId,
         username: score.user.username,
-        avatarUrl: score.user.avatar_url,  // Changed from 'avatar' to 'avatarUrl'
+        avatarUrl: score.user.avatar_url, 
         totalScore: 0,
         gamesPlayed: 0,
         gamesWon: 0,
@@ -292,7 +288,6 @@ async function getDailyLeaderboard({ category, limit, skip }) {
     }
   });
   
-  // Same aggregation logic as weekly
   const userScores = new Map();
   
   scores.forEach(score => {
@@ -301,7 +296,7 @@ async function getDailyLeaderboard({ category, limit, skip }) {
       userScores.set(userId, {
         userId,
         username: score.user.username,
-        avatarUrl: score.user.avatar_url,  // Changed from 'avatar' to 'avatarUrl'
+        avatarUrl: score.user.avatar_url,
         totalScore: 0,
         gamesPlayed: 0,
         gamesWon: 0,
@@ -349,7 +344,6 @@ export async function getUserRank({ userId, period, category }) {
     page: 1
   });
   
-  // Find user's position
   const userIndex = players.findIndex(p => p.userId === userId);
   
   if (userIndex === -1) {
@@ -378,8 +372,6 @@ export async function getUserLeaderboardContext({ userId, period, category, cont
     throw new Error('User not found');
   }
   
-  // Get full leaderboard to find position
-  // TODO: Optimize this - very expensive for large leaderboards
   const { players } = await getLeaderboard({
     period,
     category,
