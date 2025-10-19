@@ -10,7 +10,6 @@ services:
   - type: web
     name: brainbash-server
     runtime: node
-    plan: free
     buildCommand: cd server && npm install && npx prisma generate && npx prisma migrate deploy
     startCommand: cd server && npm start
     envVars:
@@ -32,7 +31,6 @@ services:
   - type: web
     name: brainbash
     runtime: static
-    plan: free
     buildCommand: cd client && npm install && npm run build
     staticPublishPath: ./client/dist
     routes:
