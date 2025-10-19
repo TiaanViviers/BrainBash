@@ -24,7 +24,7 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: FRONTEND_URL
-        value: https://brainbash.onrender.com
+        value: https://brainbash-vp7y.onrender.com
     healthCheckPath: /health
 
   # Frontend (React + Vite)
