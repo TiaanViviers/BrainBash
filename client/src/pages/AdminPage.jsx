@@ -128,20 +128,27 @@ export default function AdminPage() {
 
   const loadActiveUsers = async () => {
     try {
-      // Get all active (ACTIVE or IN_PROGRESS) matches
-      const res = await fetch(`${API_URL}/api/matches?status=active`, {
+      // Get all matches (correct endpoint is /api/match, not /api/matches)
+      const res = await fetch(`${API_URL}/api/match`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
       
-      // Extract unique users from active matches
+      // Extract unique users from active/in-progress matches
       const usersInMatches = new Set();
       if (data.matches) {
         data.matches.forEach(match => {
-          if (match.players) {
-            match.players.forEach(player => {
-              usersInMatches.add(player.username || player.user_id);
-            });
+          // Only include users from active or in-progress matches
+          if (match.status === 'waiting' || match.status === 'in_progress') {
+            if (match.match_players) {
+              match.match_players.forEach(player => {
+                // Add username if available, otherwise fall back to user object
+                const username = player.user?.username || player.username;
+                if (username) {
+                  usersInMatches.add(username);
+                }
+              });
+            }
           }
         });
       }

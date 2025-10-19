@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Calendar, Trophy, Users } from "lucide-react";
 import API_URL from "../config";
 import { resolveAvatar } from "../utils/avatarUtils";
 
@@ -8,6 +9,8 @@ function ProfilePage({ setIsLoggedIn }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [profile, setProfile] = useState(null);
+  const [matchHistory, setMatchHistory] = useState([]);
+  const [historyLoading, setHistoryLoading] = useState(true);
 
   useEffect(() => {
     const load = async () => {
@@ -56,6 +59,36 @@ function ProfilePage({ setIsLoggedIn }) {
     load();
   }, []);
 
+  // Load match history
+  useEffect(() => {
+    const loadMatchHistory = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+          setHistoryLoading(false);
+          return;
+        }
+
+        const response = await fetch(`${API_URL}/api/users/me/matches`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await response.json();
+
+        if (data.ok) {
+          setMatchHistory(data.matches || []);
+        } else {
+          console.error("Failed to load match history:", data.error);
+        }
+      } catch (error) {
+        console.error("Error loading match history:", error);
+      } finally {
+        setHistoryLoading(false);
+      }
+    };
+
+    loadMatchHistory();
+  }, []);
+
   const handleEdit = () => navigate("/editprofile");
 
   const handleDeleteAccount = async () => {
@@ -86,7 +119,6 @@ function ProfilePage({ setIsLoggedIn }) {
   };
 
   const initials = (profile?.username || "").slice(0, 1).toUpperCase();
-  const matchHistory = [];
 
   if (loading) return <div className="flex items-center justify-center min-h-screen text-white">Loading profile...</div>;
   if (error) return <div className="p-4 text-red-500">{error}</div>;
@@ -138,25 +170,91 @@ function ProfilePage({ setIsLoggedIn }) {
 
       {/* Match history */}
       <div className="space-y-4">
-        <h2 className="text-xl font-bold">Match History</h2>
-        {matchHistory.length === 0 ? (
-          <div className="text-muted-foreground">No matches played yet.</div>
+        <h2 className="text-xl font-bold flex items-center gap-2">
+          <Trophy className="text-yellow-500" size={20} />
+          Match History
+        </h2>
+        {historyLoading ? (
+          <div className="flex items-center justify-center p-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[hsl(var(--primary))]"></div>
+            <span className="ml-2 text-muted-foreground">Loading match history...</span>
+          </div>
+        ) : matchHistory.length === 0 ? (
+          <div className="text-center p-8 bg-[hsl(var(--card))] border border-[hsl(var(--card-border))] rounded-lg">
+            <Trophy className="text-gray-400 mx-auto mb-4" size={48} />
+            <p className="text-muted-foreground">No matches played yet.</p>
+          </div>
         ) : (
-          <div className="space-y-2">
-            {matchHistory.map((m) => (
+          <div className="space-y-3">
+            {matchHistory.map((match) => (
               <div
-                key={m.id}
-                className="flex justify-between items-center p-4 bg-[hsl(var(--card))] border border-[hsl(var(--card-border))] rounded-lg shadow"
+                key={match.matchId}
+                className="p-4 bg-[hsl(var(--card))] border border-[hsl(var(--card-border))] rounded-lg shadow hover:shadow-lg transition-all"
               >
-                <div className="flex flex-col">
-                  <span className="text-sm text-muted-foreground">{new Date(m.date).toLocaleDateString()}</span>
-                  <span className="font-medium">vs {m.opponent}</span>
+                <div className="flex justify-between items-start mb-3">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <h3 className="font-semibold text-lg">
+                        {match.difficulty || "Medium"} Difficulty
+                      </h3>
+                      {match.winner && (
+                        <span className="flex items-center gap-1 px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded-full text-xs font-semibold">
+                          <Trophy size={12} />
+                          WINNER
+                        </span>
+                      )}
+                    </div>
+                    
+                    <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                      <span className="flex items-center gap-1">
+                        <Calendar size={14} />
+                        {new Date(match.endTime).toLocaleDateString()}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Users size={14} />
+                        {match.placement.totalPlayers} players
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Trophy size={14} />
+                        Rank #{match.placement.rank}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-[hsl(var(--primary))]">
+                      {match.myScore?.totalScore || 0}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      {match.myScore?.correctAnswers || 0}/{match.myScore?.totalQuestions || 0} correct
+                    </div>
+                  </div>
                 </div>
-                <div className="flex items-center gap-4">
-                  <span>Score: {m.score}</span>
-                  <span className={m.result === "Win" ? "text-success font-semibold" : "text-destructive font-semibold"}>
-                    {m.result}
-                  </span>
+                
+                {/* Players list */}
+                <div className="pt-3 border-t border-[hsl(var(--card-border))]">
+                  <div className="text-sm text-muted-foreground mb-2">Final Standings:</div>
+                  <div className="space-y-1">
+                    {match.players.slice(0, 3).map((player, index) => (
+                      <div
+                        key={player.userId}
+                        className={`flex justify-between items-center p-2 rounded ${
+                          index === 0 ? "bg-yellow-500/10 border border-yellow-500/20" : "bg-[hsl(var(--muted))]"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium">#{index + 1}</span>
+                          <span className="font-medium">{player.username}</span>
+                        </div>
+                        <span className="font-semibold">{player.score}</span>
+                      </div>
+                    ))}
+                    {match.players.length > 3 && (
+                      <div className="text-sm text-muted-foreground text-center py-1">
+                        +{match.players.length - 3} more players
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
