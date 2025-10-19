@@ -455,8 +455,11 @@ export async function nextQuestion(matchId) {
   const currentIndex = await getCurrentQuestionIndex(matchId);
   const total = match.match_questions.length;
 
-  // Check if match should be finished
-  if (currentIndex >= total - 1) {
+  console.log(`[MATCH] nextQuestion: currentIndex=${currentIndex}, total=${total}`);
+
+  // Check if match should be finished (all questions answered)
+  if (currentIndex >= total) {
+    console.log(`[MATCH] ✅ All questions answered, finishing match`);
     await finishMatch(matchId);
     return { 
       index: total, 
@@ -465,6 +468,7 @@ export async function nextQuestion(matchId) {
     };
   }
 
+  console.log(`[MATCH] ➡️  Advancing to question ${currentIndex + 1}/${total}`);
   return { 
     index: currentIndex + 1, 
     finished: false,

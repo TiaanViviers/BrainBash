@@ -121,7 +121,7 @@ function EditProfile() {
 
           {/* Avatar Grid */}
           {showAvatarSelector && (
-            <div className="grid grid-cols-3 gap-3 max-h-60 overflow-auto mt-3">
+            <div className="grid grid-cols-3 gap-3 max-h-56 overflow-auto">
               {loading ? (
                 <p className="col-span-3 text-center text-gray-400">Loading avatars...</p>
               ) : (
@@ -145,7 +145,7 @@ function EditProfile() {
                       <img
                         src={avatarUrl}
                         alt={avatarOption.name}
-                        className="w-full h-24 object-cover"
+                        className="w-full h-20 object-cover"
                       />
                       <p className="text-center text-sm font-medium py-1 text-gray-200">
                         {avatarOption.name}

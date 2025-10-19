@@ -319,7 +319,7 @@ export function MyMatch() {
                 Categories
                 <ChevronDown
                   size={14}
-                  className={`transition-transform ${
+                  className={`transition-transform text-gray-900 ${
                     showFilters ? "rotate-180" : ""
                   }`}
                 />

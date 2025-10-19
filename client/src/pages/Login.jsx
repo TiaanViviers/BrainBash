@@ -130,6 +130,12 @@ function Login({ setIsLoggedIn }) {
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-6">
       <div className="w-full max-w-md bg-gray-800 rounded-2xl shadow-lg p-8 space-y-6">
+        {/* Logo */}
+        <div className="flex items-center justify-center gap-2 mb-4">
+          <img src="/BrainBashIcon.png" alt="BrainBash Logo" className="h-10 w-10 shadow-lg rounded-full" />
+          <span className="text-white text-xl md:text-2xl font-bold select-none">BrainBash</span>
+        </div>
+        
         <h1 className="text-3xl font-bold text-white text-center">
           {isSignUp ? "Sign Up" : "Login"}
         </h1>

@@ -128,61 +128,33 @@ export default function AdminPage() {
 
   const loadActiveUsers = async () => {
     try {
-      console.log('[ADMIN] Fetching active users from /api/match');
-      
-      // Get all matches (correct endpoint is /api/match, not /api/matches)
+      // Get all matches
       const res = await fetch(`${API_URL}/api/match`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
       
-      console.log('[ADMIN] Received match data:', data);
-      console.log('[ADMIN] Number of matches:', data.matches?.length || 0);
-      
-      // Extract unique users from active/in-progress matches
+      // Extract unique users from scheduled/ongoing matches
       const usersInMatches = new Set();
       if (data.matches) {
-        data.matches.forEach((match, index) => {
-          console.log(`[ADMIN] Match ${index}:`, {
-            match_id: match.match_id,
-            status: match.status,
-            players: match.match_players?.length || 0,
-            raw_match: match
-          });
-          
-          // Only include users from active or in-progress matches
-          if (match.status === 'waiting' || match.status === 'in_progress') {
-            console.log(`[ADMIN] ✅ Match ${match.match_id} is ${match.status} - checking players`);
-            
+        data.matches.forEach(match => {
+          // Only include users from scheduled or ongoing matches (not FINISHED or CANCELED)
+          if (match.status === 'SCHEDULED' || match.status === 'ONGOING') {
             if (match.match_players) {
-              match.match_players.forEach((player, pIndex) => {
-                console.log(`[ADMIN]   Player ${pIndex}:`, player);
-                
-                // Add username if available, otherwise fall back to user object
+              match.match_players.forEach(player => {
                 const username = player.user?.username || player.username;
-                console.log(`[ADMIN]   Extracted username: ${username}`);
-                
                 if (username) {
                   usersInMatches.add(username);
-                  console.log(`[ADMIN]   ✅ Added ${username} to active users`);
                 }
               });
-            } else {
-              console.log(`[ADMIN]   ❌ No match_players array found`);
             }
-          } else {
-            console.log(`[ADMIN] ⏭️  Skipping match ${match.match_id} - status is ${match.status}`);
           }
         });
-      } else {
-        console.log('[ADMIN] ❌ No matches array in response');
       }
       
-      const activeUsersArray = Array.from(usersInMatches);
-      console.log('[ADMIN] Final active users:', activeUsersArray);
-      setActiveUsers(activeUsersArray);
+      setActiveUsers(Array.from(usersInMatches));
     } catch (err) {
-      console.error("[ADMIN] Failed to load active users:", err);
+      console.error("Failed to load active users:", err);
     }
   };
 
