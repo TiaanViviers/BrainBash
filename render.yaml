@@ -1,29 +1,16 @@
-services:
+databases:
   # PostgreSQL Database
-  - type: pserv
-    name: brainbash-db
-    env: docker
+  - name: brainbash-db
+    databaseName: trivia_db
+    user: trivia_user
     plan: free
-    region: frankfurt
-    dockerfilePath: ./Dockerfile.postgres
-    envVars:
-      - key: POSTGRES_USER
-        value: trivia_user
-      - key: POSTGRES_PASSWORD
-        generateValue: true
-      - key: POSTGRES_DB
-        value: trivia_db
-    disk:
-      name: postgres-data
-      mountPath: /var/lib/postgresql/data
-      sizeGB: 1
 
+services:
   # Backend API + WebSocket Server
   - type: web
     name: brainbash-server
-    env: node
+    runtime: node
     plan: free
-    region: frankfurt
     buildCommand: cd server && npm install && npx prisma generate && npx prisma migrate deploy
     startCommand: cd server && npm start
     envVars:
@@ -39,14 +26,13 @@ services:
         generateValue: true
       - key: FRONTEND_URL
         value: https://brainbash.onrender.com
-    healthCheckPath: /api/health
+    healthCheckPath: /health
 
   # Frontend (React + Vite)
   - type: web
     name: brainbash
-    env: static
+    runtime: static
     plan: free
-    region: frankfurt
     buildCommand: cd client && npm install && npm run build
     staticPublishPath: ./client/dist
     routes:
