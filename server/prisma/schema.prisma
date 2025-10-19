@@ -1,0 +1,212 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  user_id                Int              @id @default(autoincrement())
+  username               String           @unique
+  email                  String           @unique
+  password_hash          String
+  avatar_url             String?
+  status                 UserStatus       @default(OFFLINE)
+  role                   UserRole         @default(PLAYER)
+  created_at             DateTime         @default(now())
+  match_invites_received match_invites[]  @relation("receivedInvites")
+  match_invites_sent     match_invites[]  @relation("sentInvites")
+  match_players          match_players[]
+  matches_hosted         matches[]        @relation("hostedMatches")
+  player_answers         player_answers[]
+  scores                 scores[]
+  user_stats             user_stats?
+}
+
+model categories {
+  category_id      Int                @id @default(autoincrement())
+  name             String             @unique
+  description      String?
+  match_rounds     match_rounds[]
+  trivia_questions trivia_questions[]
+  user_stats       user_stats[]
+}
+
+model trivia_questions {
+  content_hash    String            @id
+  category_id     Int
+  difficulty      Difficulty        @default(EASY)
+  question_text   String
+  correct_answer  String
+  wrong_answer_1  String
+  wrong_answer_2  String
+  wrong_answer_3  String
+  created_at      DateTime          @default(now())
+  match_questions match_questions[]
+  category        categories        @relation(fields: [category_id], references: [category_id])
+
+  @@index([category_id])
+}
+
+model matches {
+  match_id        Int               @id @default(autoincrement())
+  host_id         Int
+  status          MatchStatus       @default(SCHEDULED)
+  difficulty      Difficulty?
+  start_time      DateTime?
+  end_time        DateTime?
+  created_at      DateTime          @default(now())
+  match_invites   match_invites[]
+  match_players   match_players[]
+  match_questions match_questions[]
+  match_rounds    match_rounds[]
+  host            users             @relation("hostedMatches", fields: [host_id], references: [user_id])
+  scores          scores[]
+
+  @@index([start_time])
+}
+
+model match_rounds {
+  round_id        Int               @id @default(autoincrement())
+  match_id        Int
+  round_number    Int
+  category_id     Int
+  difficulty      Difficulty        @default(EASY)
+  match_questions match_questions[]
+  category        categories        @relation(fields: [category_id], references: [category_id])
+  match           matches           @relation(fields: [match_id], references: [match_id])
+
+  @@unique([match_id, round_number])
+}
+
+model match_players {
+  match_players_id Int      @id @default(autoincrement())
+  match_id         Int
+  user_id          Int
+  score            Int      @default(0)
+  joined_at        DateTime @default(now())
+  match            matches  @relation(fields: [match_id], references: [match_id])
+  user             users    @relation(fields: [user_id], references: [user_id])
+
+  @@unique([match_id, user_id])
+}
+
+model match_questions {
+  match_question_id Int              @id @default(autoincrement())
+  match_id          Int
+  content_hash      String
+  round_id          Int
+  question_number   Int
+  correct_option    String
+  option_a          String
+  option_b          String
+  option_c          String
+  option_d          String
+  assigned_at       DateTime         @default(now())
+  question          trivia_questions @relation(fields: [content_hash], references: [content_hash])
+  match             matches          @relation(fields: [match_id], references: [match_id], onDelete: Cascade)
+  round             match_rounds     @relation(fields: [round_id], references: [round_id])
+  player_answers    player_answers[]
+
+  @@unique([match_id, round_id, question_number])
+}
+
+model match_invites {
+  invite_id    Int          @id @default(autoincrement())
+  match_id     Int
+  sender_id    Int
+  recipient_id Int
+  status       InviteStatus @default(PENDING)
+  sent_at      DateTime     @default(now())
+  responded_at DateTime?
+  match        matches      @relation(fields: [match_id], references: [match_id])
+  recipient    users        @relation("receivedInvites", fields: [recipient_id], references: [user_id])
+  sender       users        @relation("sentInvites", fields: [sender_id], references: [user_id])
+
+  @@index([recipient_id, status])
+}
+
+model player_answers {
+  answer_id         Int             @id @default(autoincrement())
+  match_question_id Int
+  user_id           Int
+  selected_option   String?
+  is_correct        Boolean?
+  response_time_ms  Int?
+  points_awarded    Int             @default(0)
+  answered_at       DateTime        @default(now())
+  match_question    match_questions @relation(fields: [match_question_id], references: [match_question_id])
+  user              users           @relation(fields: [user_id], references: [user_id])
+
+  @@index([match_question_id, user_id])
+  @@index([match_question_id, response_time_ms])
+}
+
+model scores {
+  score_id          Int      @id @default(autoincrement())
+  match_id          Int
+  user_id           Int
+  total_score       Int      @default(0)
+  correct_answers   Int      @default(0)
+  total_questions   Int      @default(0)
+  avg_response_time Int?
+  created_at        DateTime @default(now())
+  match             matches  @relation(fields: [match_id], references: [match_id])
+  user              users    @relation(fields: [user_id], references: [user_id])
+
+  @@unique([match_id, user_id])
+}
+
+model user_stats {
+  user_stats_id          Int         @id @default(autoincrement())
+  user_id                Int         @unique
+  games_played           Int         @default(0)
+  games_won              Int         @default(0)
+  total_score            Int         @default(0)
+  highest_score          Int         @default(0)
+  average_score          Float       @default(0)
+  correct_answers        Int         @default(0)
+  best_category          Int?
+  best_category_accuracy Float?
+  total_answers          Int         @default(0)
+  avg_response_time      Float       @default(0)
+  last_played_at         DateTime?
+  created_at             DateTime    @default(now())
+  updated_at             DateTime    @default(now())
+  category               categories? @relation(fields: [best_category], references: [category_id])
+  user                   users       @relation(fields: [user_id], references: [user_id])
+}
+
+enum UserRole {
+  PLAYER
+  ADMIN
+}
+
+enum UserStatus {
+  OFFLINE
+  ONLINE
+  IN_MATCH
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum MatchStatus {
+  SCHEDULED
+  ONGOING
+  FINISHED
+  CANCELED
+}
+
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  CANCELED
+}
