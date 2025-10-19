@@ -22,7 +22,7 @@ import { PrismaClient } from '../generated/prisma/index.js';
 const prisma = new PrismaClient();
 
 // Token expiry times
-const ACCESS_TOKEN_EXPIRY = '15m';
+const ACCESS_TOKEN_EXPIRY = '24h';  // Extended for demos/testing
 const REFRESH_TOKEN_EXPIRY = '7d';
 
 // Password requirements
