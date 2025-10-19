@@ -97,7 +97,7 @@ function EditProfile() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 p-6 flex justify-center">
+    <div className="min-h-screen p-6 flex justify-center">
       <div className="w-full max-w-3xl bg-gray-800 rounded-2xl shadow-lg p-8 space-y-6">
         <h1 className="text-3xl font-bold text-white text-center mb-6">Edit Profile</h1>
 
@@ -145,7 +145,7 @@ function EditProfile() {
                       <img
                         src={avatarUrl}
                         alt={avatarOption.name}
-                        className="w-full h-20 object-cover"
+                        className="w-full h-20 object-contain bg-gray-600"
                       />
                       <p className="text-center text-sm font-medium py-1 text-gray-200">
                         {avatarOption.name}

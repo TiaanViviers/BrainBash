@@ -195,7 +195,7 @@ function ProfilePage({ setIsLoggedIn }) {
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       <h3 className="font-semibold text-lg">
-                        {match.difficulty || "Medium"} Difficulty
+                        {match.category || "Trivia"} - {match.difficulty || "Medium"} Difficulty
                       </h3>
                       {match.winner && (
                         <span className="flex items-center gap-1 px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded-full text-xs font-semibold">

@@ -95,7 +95,7 @@ function App() {
   const isActive = (path) => location.pathname.startsWith(path);
 
   return (
-    <div className="flex min-h-screen bg-gray-900 text-white">
+    <div className="flex min-h-screen bg-[hsl(var(--background))] text-white">
 
       {/* Top-right logo */}
       <div className="fixed top-4 right-4 flex items-center gap-2 z-50">

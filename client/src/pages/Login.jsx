@@ -128,7 +128,7 @@ function Login({ setIsLoggedIn }) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center p-6">
+    <div className="min-h-screen bg-[hsl(var(--background))] flex flex-col items-center justify-center p-6">
       {/* Logo - Above the login panel */}
       <div className="flex items-center justify-center gap-3 mb-8">
         <img src="/BrainBashIcon.png" alt="BrainBash Logo" className="h-40 w-40 shadow-lg rounded-full" />
