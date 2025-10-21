@@ -99,8 +99,8 @@ export async function getQuestions(options = {}) {
   let url = buildRequestUrl(params, token);
   let raw = await fetchJson(url);
 
-  // if token exhausted, refresh once and retry
-  if (raw?.response_code === 4) {
+  // if token exhausted (4) or token not found (3), refresh once and retry
+  if (raw?.response_code === 4 || raw?.response_code === 3) {
     await requestNewToken();
     url = buildRequestUrl(params, token);
     raw = await fetchJson(url);
