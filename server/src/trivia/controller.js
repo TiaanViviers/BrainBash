@@ -29,7 +29,7 @@ export async function importQuestionsFromAPI(req, res) {
       ],
       difficulties: ['easy', 'medium', 'hard'],
       perDifficulty: 7,
-      rateLimitMs: 600
+      rateLimitMs: 5500  // OpenTDB requires 5 seconds between requests
     });
     
     console.log(`✓ Fetched ${batch.length} unique questions from OpenTDB`);

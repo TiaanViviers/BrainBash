@@ -16,7 +16,7 @@ export async function generateSeedBatch({
   categories = Object.keys(CANONICAL_TO_OTDB),
   difficulties = DEFAULT_DIFFICULTIES,
   perDifficulty = DEFAULT_PER_DIFFICULTY,
-  rateLimitMs = 600
+  rateLimitMs = 5500
 } = {}) {
   const all = [];
 
@@ -173,7 +173,7 @@ function buildRequestUrl(params, currentToken) {
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 /** Thin fetch wrapper that returns JSON */
-async function fetchJson(url, { retries = 3, baseDelayMs = 500 } = {}) {
+async function fetchJson(url, { retries = 3, baseDelayMs = 2000 } = {}) {
   for (let attempt = 0; attempt <= retries; attempt++) {
     const res = await fetch(url);
 
@@ -182,7 +182,8 @@ async function fetchJson(url, { retries = 3, baseDelayMs = 500 } = {}) {
       const retryAfter = res.headers.get('retry-after');
       const wait = retryAfter
         ? Math.max(0, Number(retryAfter) * 1000)
-        : baseDelayMs * Math.pow(2, attempt) + Math.floor(Math.random() * 250);
+        : baseDelayMs * Math.pow(2, attempt) + Math.floor(Math.random() * 1000);
+      console.log(`Rate limited by OpenTDB, waiting ${Math.round(wait/1000)}s before retry ${attempt + 1}/${retries}`);
       await sleep(wait);
       continue;
     }

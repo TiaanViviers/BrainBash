@@ -39,7 +39,7 @@ async function importQuestions() {
       ],
       difficulties: ['easy', 'medium', 'hard'],
       perDifficulty: 7,  // 7 per difficulty = 21 per category = 126 total
-      rateLimitMs: 600   // Small delay between requests to respect API limits
+      rateLimitMs: 5500  // OpenTDB requires 5 seconds between requests
     });
     
     console.log(`✓ Fetched ${batch.length} unique questions from OpenTDB\n`);
